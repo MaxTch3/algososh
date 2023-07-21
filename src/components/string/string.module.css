@@ -10,3 +10,9 @@
    display: flex;
    gap: 12px;
 }
+
+.letter_box {
+   padding-top: 120px;
+   display: flex;
+   gap: 16px;
+}
