@@ -6,16 +6,25 @@ import styles from './string.module.css'
 import { Circle } from "../ui/circle/circle";
 import { ElementStates } from "../../types/element-states";
 
+interface IArray {
+   state: ElementStates,
+   item: string
+}
+
 export const StringComponent: React.FC = () => {
    const [line, setLine] = useState('');
-   const [arr, setArr] = useState<string[]>([])
+   const [arr, setArr] = useState<IArray[]>([])
 
    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setLine(e.target.value)
    }
 
    const onClick = () => {
-      setArr(line.split(''))
+      const arrTemp = line.split('');
+      const arr = arrTemp.length > 1
+         ? arrTemp.map((item) => { return { item, state: ElementStates.Default } })
+         : [{ item: arrTemp[0], state: ElementStates.Modified }];
+      setArr(arr)
    }
 
    return (
@@ -44,8 +53,8 @@ export const StringComponent: React.FC = () => {
                   arr.map((letter, index) => (
                      <Circle
                         key={index}
-                        state={ElementStates.Default}
-                        letter={letter}
+                        state={letter.state}
+                        letter={letter.item}
                      />
                   ))
                }
