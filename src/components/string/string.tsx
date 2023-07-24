@@ -13,19 +13,79 @@ interface IArray {
 
 export const StringComponent: React.FC = () => {
    const [line, setLine] = useState('');
-   const [arr, setArr] = useState<IArray[]>([])
+   const [arr, setArr] = useState<IArray[]>([]);
+   const [isLoader, setIsLoader] = useState(false);
 
    const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setLine(e.target.value)
    }
 
    const onClick = () => {
+
       const arrTemp = line.split('');
       const arr = arrTemp.length > 1
          ? arrTemp.map((item) => { return { item, state: ElementStates.Default } })
          : [{ item: arrTemp[0], state: ElementStates.Modified }];
-      setArr(arr)
+      setArr(arr);
+
+      const reverseLine = (arr: IArray[], start = 0, end = arr.length - 1) => {
+         setIsLoader(true);
+         const middle = Math.floor(arr.length / 2);
+         if (start === end) {
+            arr[start].state = ElementStates.Modified;
+
+            setTimeout(() => {
+
+               arr[start - 1].state = ElementStates.Modified;
+               arr[end + 1].state = ElementStates.Modified;
+               setIsLoader(false);
+            }, 1750)
+            console.log(middle, end, start);
+         };
+         if (start < end) {
+            setTimeout(() => {
+               if (start) {
+                  swap(arr, start - 1, end + 1);
+                  arr[start - 1].state = ElementStates.Modified;
+                  arr[end + 1].state = ElementStates.Modified;
+               }
+
+               arr[start].state = ElementStates.Changing;
+               arr[end].state = ElementStates.Changing;
+               
+               setArr([...arr]);
+               console.log(middle, end, start);
+               start++;
+               end--;
+               reverseLine(arr, start, end)
+            }, 1750);
+
+
+
+         } else {
+            setTimeout(() => {
+               swap(arr, start - 1, end + 1);
+               arr[end + 1].state = ElementStates.Modified;
+               arr[start - 1].state = ElementStates.Modified;
+               setArr(arr);
+               setIsLoader(false);
+            }, 1750)
+         }
+
+
+      }
+      if (arr.length !== 1) {
+         reverseLine(arr)
+      }
+
    }
+
+   const swap = (arr: IArray[], firstIndex: number, secondIndex: number): void => {
+      const temp = arr[firstIndex];
+      arr[firstIndex] = arr[secondIndex];
+      arr[secondIndex] = temp;
+   }
+
 
    return (
       <SolutionLayout title="Строка">
@@ -42,7 +102,7 @@ export const StringComponent: React.FC = () => {
                   style={{ minWidth: '175px' }}
                   text={'Развернуть'}
                   type="button"
-                  isLoader={false}
+                  isLoader={isLoader}
                   linkedList={"small"}
                   disabled={line ? false : true}
                   onClick={onClick}
