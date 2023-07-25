@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import { SolutionLayout } from "../ui/solution-layout/solution-layout";
 import { Input } from "../ui/input/input";
 import { Button } from "../ui/button/button";
@@ -10,12 +10,12 @@ import { swap } from "./utils";
 import { DELAY } from "./constants";
 
 export const StringComponent: React.FC = () => {
-   const [line, setLine] = useState('');
-   const [arr, setArr] = useState<IItem[]>([]);
+   const [inputText, setInputText] = useState('');
+   const [letters, setLetters] = useState<IItem[]>([]);
    const [isLoader, setIsLoader] = useState(false);
 
-   const reverseLine = (arr: IItem[], start = 0, end = arr.length - 1) => {
-      
+   const reverseLine = useCallback((arr: IItem[], start = 0, end = arr.length - 1) => {
+
       setIsLoader(true);
 
       if (start === end) {
@@ -36,7 +36,7 @@ export const StringComponent: React.FC = () => {
             };
             arr[start].state = ElementStates.Changing;
             arr[end].state = ElementStates.Changing;
-            setArr([...arr]);
+            setLetters([...arr]);
             start++;
             end--;
             reverseLine(arr, start, end)
@@ -46,27 +46,27 @@ export const StringComponent: React.FC = () => {
             swap(arr, start - 1, end + 1);
             arr[end + 1].state = ElementStates.Modified;
             arr[start - 1].state = ElementStates.Modified;
-            setArr(arr);
+            setLetters(arr);
             setIsLoader(false);
          }, DELAY)
       }
-   }
+   }, [])
 
-   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      setLine(e.target.value)
-   }
+   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+      setInputText(e.target.value)
+   }, [])
 
-   const onClick = () => {
-      const arrTemp = line.split('');
+   const handleClick = useCallback(() => {
+      const arrTemp = inputText.split('');
       const arr = arrTemp.length > 1
          ? arrTemp.map((item) => { return { item, state: ElementStates.Default } })
          : [{ item: arrTemp[0], state: ElementStates.Modified }];
-      setArr(arr);
+      setLetters(arr);
 
       if (arr.length !== 1) {
          reverseLine(arr)
       }
-   }
+   }, [inputText, reverseLine]);
 
    return (
       <SolutionLayout title="Строка">
@@ -77,7 +77,7 @@ export const StringComponent: React.FC = () => {
                   type="text"
                   maxLength={11}
                   isLimitText={true}
-                  onChange={onChange}
+                  onChange={handleChange}
                />
                <Button
                   style={{ minWidth: '175px' }}
@@ -85,17 +85,17 @@ export const StringComponent: React.FC = () => {
                   type="button"
                   isLoader={isLoader}
                   linkedList={"small"}
-                  disabled={line ? false : true}
-                  onClick={onClick}
+                  disabled={!inputText}
+                  onClick={handleClick}
                />
             </div>
             <div className={styles.letter_box}>
                {
-                  arr.map((letter, index) => (
+                  letters.map(({item, state}, index) => (
                      <Circle
                         key={index}
-                        state={letter.state}
-                        letter={letter.item}
+                        state={state}
+                        letter={item}
                      />
                   ))
                }
