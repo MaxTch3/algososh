@@ -89,7 +89,7 @@ export const StringComponent: React.FC = () => {
                   onClick={handleClick}
                />
             </div>
-            <div className={styles.letter_box}>
+            <div className={styles.letters_box}>
                {
                   letters.map(({item, state}, index) => (
                      <Circle
