@@ -1,4 +1,4 @@
-import { IItem } from "./types";
+import { IItem } from './types';
 
 export const swap = (arr: IItem[], firstIndex: number, secondIndex: number): void => {
    const temp = arr[firstIndex];

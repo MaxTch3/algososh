@@ -1,13 +1,13 @@
-import React, { useCallback, useState } from "react";
-import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-import { Input } from "../ui/input/input";
-import { Button } from "../ui/button/button";
+import React, { useCallback, useState } from 'react';
+import { SolutionLayout } from '../ui/solution-layout/solution-layout';
+import { Input } from '../ui/input/input';
+import { Button } from '../ui/button/button';
 import styles from './string.module.css'
-import { Circle } from "../ui/circle/circle";
-import { ElementStates } from "../../types/element-states";
-import { IItem } from "./types";
-import { swap } from "./utils";
-import { DELAY } from "./constants";
+import { Circle } from '../ui/circle/circle';
+import { ElementStates } from '../../types/element-states';
+import { IItem } from './types';
+import { swap } from './utils';
+import { DELAY_IN_MS } from '../../constants/delays';
 
 export const StringComponent: React.FC = () => {
    const [inputText, setInputText] = useState('');
@@ -24,7 +24,7 @@ export const StringComponent: React.FC = () => {
             arr[start - 1].state = ElementStates.Modified;
             arr[end + 1].state = ElementStates.Modified;
             setIsLoader(false)
-         }, DELAY)
+         }, DELAY_IN_MS)
       };
 
       if (start < end) {
@@ -40,7 +40,7 @@ export const StringComponent: React.FC = () => {
             start++;
             end--;
             reverseLine(arr, start, end)
-         }, DELAY);
+         }, DELAY_IN_MS);
       } else {
          setTimeout(() => {
             swap(arr, start - 1, end + 1);
@@ -48,7 +48,7 @@ export const StringComponent: React.FC = () => {
             arr[start - 1].state = ElementStates.Modified;
             setLetters(arr);
             setIsLoader(false);
-         }, DELAY)
+         }, DELAY_IN_MS)
       }
    }, [])
 
@@ -69,12 +69,12 @@ export const StringComponent: React.FC = () => {
    }, [inputText, reverseLine]);
 
    return (
-      <SolutionLayout title="Строка">
+      <SolutionLayout title='Строка'>
          <div className={styles.container}>
             <div className={styles.input_box}>
                <Input
-                  placeholder="Введите текст"
-                  type="text"
+                  placeholder='Введите текст'
+                  type='text'
                   maxLength={11}
                   isLimitText={true}
                   onChange={handleChange}
@@ -82,9 +82,9 @@ export const StringComponent: React.FC = () => {
                <Button
                   style={{ minWidth: '175px' }}
                   text={'Развернуть'}
-                  type="button"
+                  type='button'
                   isLoader={isLoader}
-                  linkedList={"small"}
+                  linkedList={'small'}
                   disabled={!inputText}
                   onClick={handleClick}
                />
