@@ -5,7 +5,7 @@ import styles from './fibonacci-page.module.css'
 import { Input } from '../ui/input/input';
 import { Circle } from '../ui/circle/circle';
 import { SHORT_DELAY_IN_MS } from '../../constants/delays';
-import { wait } from './utils';
+import { delay } from './utils';
 
 export const FibonacciPage: React.FC = () => {
    const minNumber = 0;
@@ -28,7 +28,7 @@ export const FibonacciPage: React.FC = () => {
             fibArray.push(fibArray[i - 1] + fibArray[i - 2]);
          }
          setArray([...fibArray])
-         await wait(SHORT_DELAY_IN_MS);
+         await delay(SHORT_DELAY_IN_MS);
       }
       setIsLoader(false);
    }
@@ -57,7 +57,7 @@ export const FibonacciPage: React.FC = () => {
          e.preventDefault();
       }
    }
-   
+
    return (
       <SolutionLayout title='Последовательность Фибоначчи'>
          <div className={styles.container}>
