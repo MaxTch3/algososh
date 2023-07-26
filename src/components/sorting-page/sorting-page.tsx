@@ -1,14 +1,30 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { RadioInput } from '../ui/radio-input/radio-input';
 import styles from './sorting-page.module.css'
 import { Button } from '../ui/button/button';
 import { Direction } from '../../types/direction';
 import { randomArr } from './utils';
+import { ElementStates } from '../../types/element-states';
+import { Column } from '../ui/column/column';
+
+
+interface IColumn {
+   number: number;
+   state: ElementStates
+}
 
 export const SortingPage: React.FC = () => {
-console.log(randomArr(3, 5))
+   const minLength: number = 3;
+   const maxLength = 17;
+   const [arrayNumbers, setArrayNumbers] = useState<IColumn[]>([])
 
+   useEffect(() => {
+      setArrayNumbers(randomArr(minLength, maxLength).map((number) => { return {number, state: ElementStates.Default } }))
+   }, []);
+   
+   
+   console.log(arrayNumbers)
    return (
       <SolutionLayout title='Сортировка массива'>
          <div className={styles.container}>
@@ -41,6 +57,14 @@ console.log(randomArr(3, 5))
                      style={{ minWidth: '168px' }}
                   />
                </div>
+            </div>
+            <div className={styles.array_box}>
+               {
+                  arrayNumbers.map(({ number, state }, index) => (
+                     <Column key={index} index={number} state={state} />
+                  ))
+               }
+
             </div>
          </div>
       </SolutionLayout>

@@ -3,22 +3,34 @@
    flex-direction: column;
    align-items: center;
 }
+
 .control_box {
    display: flex;
    align-items: center;
    gap: 52px;
 }
+
 .radio_box {
    display: flex;
    gap: 40px;
 }
-.buttons_sorting{
+
+.buttons_sorting {
    display: flex;
    gap: 12px;
 }
+
 .button_reset {
    margin-left: 80px;
 }
+
 .buttons {
    display: flex;
+}
+
+.array_box {
+   padding-top: 48px;
+   display: flex;
+   gap: 10px;
+   align-items: flex-end;
 }
