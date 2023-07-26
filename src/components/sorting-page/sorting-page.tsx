@@ -18,12 +18,14 @@ export const SortingPage: React.FC = () => {
    const minLength: number = 3;
    const maxLength = 17;
    const [arrayNumbers, setArrayNumbers] = useState<IColumn[]>([])
-
+   const createArray = () => {
+      const newArray = randomArr(minLength, maxLength).map((number) => { return { number, state: ElementStates.Default } });
+      setArrayNumbers(newArray)
+   }
    useEffect(() => {
-      setArrayNumbers(randomArr(minLength, maxLength).map((number) => { return {number, state: ElementStates.Default } }))
+      createArray()
    }, []);
-   
-   
+
    console.log(arrayNumbers)
    return (
       <SolutionLayout title='Сортировка массива'>
@@ -53,8 +55,9 @@ export const SortingPage: React.FC = () => {
                   <Button
                      extraClass={styles.button_reset}
                      text='Новый массив'
-                     type='reset'
+                     type='button'
                      style={{ minWidth: '168px' }}
+                     onClick={createArray}
                   />
                </div>
             </div>
