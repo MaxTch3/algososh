@@ -4,8 +4,11 @@ import { RadioInput } from '../ui/radio-input/radio-input';
 import styles from './sorting-page.module.css'
 import { Button } from '../ui/button/button';
 import { Direction } from '../../types/direction';
+import { randomArr } from './utils';
 
 export const SortingPage: React.FC = () => {
+console.log(randomArr(3, 5))
+
    return (
       <SolutionLayout title='Сортировка массива'>
          <div className={styles.container}>
