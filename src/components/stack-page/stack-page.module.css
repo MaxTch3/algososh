@@ -1,0 +1,24 @@
+.container {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.control_box {
+   display: flex;
+   align-items: flex-start;
+   gap: 12px;
+}
+
+.buttons {
+   display: flex;
+}
+
+.buttons_action {
+   display: flex;
+   gap: 12px;
+}
+
+.button_reset {
+   margin-left: 80px;
+}

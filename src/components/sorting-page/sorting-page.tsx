@@ -7,7 +7,7 @@ import { Direction } from '../../types/direction';
 import { randomArr } from './utils';
 import { ElementStates } from '../../types/element-states';
 import { Column } from '../ui/column/column';
-import { SHORT_DELAY_IN_MS } from '../../constants/delays';
+import { DELAY_IN_MS } from '../../constants/delays';
 import { delay } from '../../utils/utils';
 import { AlgorithmMethod, IColumn } from './types';
 
@@ -56,7 +56,7 @@ export const SortingPage: React.FC = () => {
          for (let j = i + 1; j < arr.length; j++) {
             arr[j].state = ElementStates.Changing;
             setArray([...arr]);
-            await delay(SHORT_DELAY_IN_MS)
+            await delay(DELAY_IN_MS)
             if (order === 'asc'
                ? arr[j].number < arr[currIndex].number
                : arr[j].number > arr[currIndex].number) {
@@ -99,7 +99,7 @@ export const SortingPage: React.FC = () => {
                arr[j + 1].number = temp;
                setArray([...arr])
             }
-            await delay(SHORT_DELAY_IN_MS);
+            await delay(DELAY_IN_MS);
             arr[j].state = ElementStates.Default;
             arr[j + 1].state = ElementStates.Default;
             setArray([...arr]);
