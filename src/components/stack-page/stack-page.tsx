@@ -1,12 +1,12 @@
-import React, { useCallback, useMemo, useState } from "react";
-import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-import { Input } from "../ui/input/input";
+import React, { useCallback, useMemo, useState } from 'react';
+import { SolutionLayout } from '../ui/solution-layout/solution-layout';
+import { Input } from '../ui/input/input';
 import styles from './stack-page.module.css'
-import { Button } from "../ui/button/button";
-import { ElementStates } from "../../types/element-states";
-import { Circle } from "../ui/circle/circle";
-import { IStackItem } from "./types";
-import { Stack } from "./utils";
+import { Button } from '../ui/button/button';
+import { ElementStates } from '../../types/element-states';
+import { Circle } from '../ui/circle/circle';
+import { IStackItem } from './types';
+import { Stack } from './utils';
 
 export const StackPage: React.FC = () => {
    const [inputText, setInputText] = useState('');
@@ -41,7 +41,7 @@ export const StackPage: React.FC = () => {
    }, [])
 
    return (
-      <SolutionLayout title="Стек">
+      <SolutionLayout title='Стек'>
          <div className={styles.container}>
             <div className={styles.control_box}>
                <Input
@@ -59,14 +59,14 @@ export const StackPage: React.FC = () => {
                         text='Добавить'
                         type='button'
                         style={{ minWidth: '120px' }}
-                        disabled={!inputText}
+                        disabled={!inputText || array.length >= 10}
                         onClick={pushItem}
                      />
                      <Button
                         text='Удалить'
                         type='button'
                         style={{ minWidth: '110px' }}
-                        disabled={stack.getSize() === 0}
+                        disabled={array.length === 0}
                         onClick={popItem}
                      />
                   </div>
@@ -75,7 +75,7 @@ export const StackPage: React.FC = () => {
                      text='Очистить'
                      type='button'
                      style={{ minWidth: '120px' }}
-                     disabled={stack.getSize() === 0}
+                     disabled={array.length === 0}
                      onClick={resetItem}
                   />
                </div>

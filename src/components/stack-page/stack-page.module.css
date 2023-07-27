@@ -23,13 +23,13 @@
    margin-left: 80px;
 }
 
-.array_box{
-      max-width: 950px;
-         padding-top: 48px;
-         display: flex;
-         column-gap: 16px;
-         row-gap: 48px;
-         flex-wrap: wrap;
-         display: flex;
-         justify-content: center;
+.array_box {
+   max-width: 950px;
+   padding-top: 48px;
+   display: flex;
+   column-gap: 16px;
+   row-gap: 48px;
+   flex-wrap: wrap;
+   display: flex;
+   justify-content: center;
 }

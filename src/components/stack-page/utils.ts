@@ -1,4 +1,4 @@
-import { IStack } from "./types";
+import { IStack } from './types';
 
 export class Stack<T> implements IStack<T> {
    private container: T[] = [];
