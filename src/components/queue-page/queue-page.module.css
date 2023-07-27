@@ -1,0 +1,35 @@
+.container {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+
+.control_box {
+   display: flex;
+   align-items: flex-start;
+   gap: 12px;
+}
+
+.buttons {
+   display: flex;
+}
+
+.buttons_action {
+   display: flex;
+   gap: 12px;
+}
+
+.button_reset {
+   margin-left: 80px;
+}
+
+.array_box {
+   max-width: 950px;
+   padding-top: 48px;
+   display: flex;
+   column-gap: 16px;
+   row-gap: 80px;
+   flex-wrap: wrap;
+   display: flex;
+   justify-content: center;
+}
