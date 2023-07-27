@@ -13,26 +13,30 @@ import { DELAY_IN_MS } from '../../constants/delays';
 export const StackPage: React.FC = () => {
    const [inputText, setInputText] = useState('');
    const [array, setArray] = useState<IStackItem[]>([]);
+   const [isLoadingPush, setIsLoadingPush] = useState(false);
+   const [isLoadingPop, setIsLoadingPop] = useState(false);
 
    const stack = useMemo(() => {
       return new Stack<IStackItem>()
    }, []);
 
    const pushItem = async () => {
+      setIsLoadingPush(true);
       setInputText('');
       stack.push({ head: 'top', value: inputText, state: ElementStates.Changing });
       const arr = stack.getItems();
       if (arr.length > 1) {
          arr[arr.length - 2].head = ''
-      }
-      setArray([...arr])
+      };
+      setArray([...arr]);
       await delay(DELAY_IN_MS);
       arr[arr.length - 1].state = ElementStates.Default;
-      console.log(arr);
       setArray([...arr]);
+      setIsLoadingPush(false);
    }
 
    const popItem = async () => {
+      setIsLoadingPop(true);
       let arr = stack.getItems();
       arr[arr.length - 1].state = ElementStates.Changing
       setArray([...arr]);
@@ -42,8 +46,8 @@ export const StackPage: React.FC = () => {
       if (arr.length >= 1) {
          arr[arr.length - 1].head = 'top'
       }
-      console.log(arr)
       setArray([...arr])
+      setIsLoadingPop(false);
    }
 
    const resetItem = () => {
@@ -74,14 +78,15 @@ export const StackPage: React.FC = () => {
                         text='Добавить'
                         type='button'
                         style={{ minWidth: '120px' }}
-                        disabled={!inputText || array.length >= 20}
+                        disabled={!inputText || array.length >= 20 || isLoadingPop}
                         onClick={pushItem}
+                        isLoader={isLoadingPush}
                      />
                      <Button
                         text='Удалить'
                         type='button'
                         style={{ minWidth: '110px' }}
-                        disabled={array.length === 0}
+                        disabled={array.length === 0 || isLoadingPush}
                         onClick={popItem}
                      />
                   </div>
@@ -90,7 +95,7 @@ export const StackPage: React.FC = () => {
                      text='Очистить'
                      type='button'
                      style={{ minWidth: '120px' }}
-                     disabled={array.length === 0}
+                     disabled={array.length === 0 || isLoadingPush || isLoadingPop}
                      onClick={resetItem}
                   />
                </div>
