@@ -5,7 +5,7 @@ import styles from './fibonacci-page.module.css'
 import { Input } from '../ui/input/input';
 import { Circle } from '../ui/circle/circle';
 import { SHORT_DELAY_IN_MS } from '../../constants/delays';
-import { delay } from './utils';
+import { delay } from '../../utils/utils';
 
 export const FibonacciPage: React.FC = () => {
    const minNumber = 0;

@@ -8,19 +8,8 @@ import { randomArr } from './utils';
 import { ElementStates } from '../../types/element-states';
 import { Column } from '../ui/column/column';
 import { SHORT_DELAY_IN_MS } from '../../constants/delays';
-
-
-interface IColumn {
-   number: number;
-   state: ElementStates
-};
-
-enum AlgorithmMethod { SelectionSort, BubbleSort };
-
-const delay = (ms: number) =>
-   new Promise((resolve) =>
-      setTimeout(resolve, ms)
-   );
+import { delay } from '../../utils/utils';
+import { AlgorithmMethod, IColumn } from './types';
 
 export const SortingPage: React.FC = () => {
    const minLength: number = 3;
@@ -39,10 +28,10 @@ export const SortingPage: React.FC = () => {
    const resetStatus = () => {
       array.forEach((item) => item.state = ElementStates.Default);
       setArray(array)
-   } 
+   }
 
    const selectionSort = async (arr: IColumn[], order: 'asc' | 'desc') => {
-      for (let i = 0; i < arr.length; i++) { 
+      for (let i = 0; i < arr.length; i++) {
          if (i) {
             arr[i - 1].state = ElementStates.Modified
             arr[i].state = ElementStates.Changing
@@ -53,21 +42,19 @@ export const SortingPage: React.FC = () => {
          }
          if (i === arr.length - 1) {
             arr[i].state = ElementStates.Modified
-            setArray([...arr])        
+            setArray([...arr])
          }
-         let currIndex = i;     
+         let currIndex = i;        
          for (let j = i + 1; j < arr.length; j++) {
-
-
             arr[j].state = ElementStates.Changing;
             setArray([...arr]);
-
             await delay(SHORT_DELAY_IN_MS)
             if (order === 'asc'
-               ? arr[j].number < arr[currIndex].number 
+               ? arr[j].number < arr[currIndex].number
                : arr[j].number > arr[currIndex].number) {
-               currIndex = j;           
+               currIndex = j;
             }
+
             arr[j].state = ElementStates.Default;
             setArray([...arr]);
          };
@@ -77,11 +64,36 @@ export const SortingPage: React.FC = () => {
             arr[i].number = arr[currIndex].number;
             arr[currIndex].number = temp;
             setArray([...arr]);
-         } 
+         }
       }
    }
 
+   const bubbleSort = async (arr: IColumn[], order: 'asc' | 'desc') => {
+      for (let i = 0; i < arr.length; i++) {
 
+         for (let j = 0; j < arr.length - i - 1; j++) {
+            arr[j].state = ElementStates.Changing;
+            arr[j + 1].state = ElementStates.Changing;
+            setArray([...arr]);
+
+            if (order === 'asc' ? arr[j].number > arr[j + 1].number : arr[j].number < arr[j + 1].number) {
+               const temp = arr[j].number;
+               arr[j].number = arr[j + 1].number;
+               arr[j + 1].number = temp;
+               setArray([...arr])
+            }
+            await delay(SHORT_DELAY_IN_MS);
+            arr[j].state = ElementStates.Default;
+            arr[j + 1].state = ElementStates.Default;
+            setArray([...arr]);
+         }
+
+         arr[arr.length - i - 1].state = ElementStates.Modified;
+      }
+      arr[0].state = ElementStates.Modified;
+      arr[1].state = ElementStates.Modified;
+      setArray([...arr]);
+   }
 
    return (
       <SolutionLayout title='Сортировка массива'>
@@ -111,10 +123,9 @@ export const SortingPage: React.FC = () => {
                            if (method === AlgorithmMethod.SelectionSort) {
                               selectionSort(array, 'asc')
                            } else {
-                              console.log('Пузырьковый метод')
+                              bubbleSort(array, 'asc')
                            }
                         }}
-
                      />
                      <Button
                         text='По убыванию'
@@ -126,10 +137,9 @@ export const SortingPage: React.FC = () => {
                            if (method === AlgorithmMethod.SelectionSort) {
                               selectionSort(array, 'desc')
                            } else {
-                              console.log('Пузырьковый метод')
+                              bubbleSort(array, 'desc')
                            }
                         }}
-
                      />
                   </div>
                   <Button
