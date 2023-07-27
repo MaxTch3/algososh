@@ -15,7 +15,10 @@ export const SortingPage: React.FC = () => {
    const minLength: number = 3;
    const maxLength = 17;
    const [array, setArray] = useState<IColumn[]>([]);
-   const [method, setMethod] = useState(AlgorithmMethod.SelectionSort)
+   const [method, setMethod] = useState(AlgorithmMethod.SelectionSort);
+   const [isLoaderAsc, setIsLoaderAsc] = useState(false);
+   const [isLoaderDesc, setIsLoaderDesc] = useState(false);
+
    const createArray = useMemo(() => () => {
       const newArray = randomArr(minLength, maxLength).map((number) => { return { number, state: ElementStates.Default } });
       setArray(newArray)
@@ -23,7 +26,7 @@ export const SortingPage: React.FC = () => {
 
    useEffect(() => {
       createArray()
-   }, []);
+   }, [createArray]);
 
    const resetStatus = () => {
       array.forEach((item) => item.state = ElementStates.Default);
@@ -31,6 +34,11 @@ export const SortingPage: React.FC = () => {
    }
 
    const selectionSort = async (arr: IColumn[], order: 'asc' | 'desc') => {
+      if (order === 'asc') {
+         setIsLoaderAsc(true);
+      } else {
+         setIsLoaderDesc(true);
+      }
       for (let i = 0; i < arr.length; i++) {
          if (i) {
             arr[i - 1].state = ElementStates.Modified
@@ -44,7 +52,7 @@ export const SortingPage: React.FC = () => {
             arr[i].state = ElementStates.Modified
             setArray([...arr])
          }
-         let currIndex = i;        
+         let currIndex = i;
          for (let j = i + 1; j < arr.length; j++) {
             arr[j].state = ElementStates.Changing;
             setArray([...arr]);
@@ -66,9 +74,19 @@ export const SortingPage: React.FC = () => {
             setArray([...arr]);
          }
       }
+      if (order === 'asc') {
+         setIsLoaderAsc(false);
+      } else {
+         setIsLoaderDesc(false);
+      }
    }
 
    const bubbleSort = async (arr: IColumn[], order: 'asc' | 'desc') => {
+      if (order === 'asc') {
+         setIsLoaderAsc(true);
+      } else {
+         setIsLoaderDesc(true);
+      }
       for (let i = 0; i < arr.length; i++) {
          for (let j = 0; j < arr.length - i - 1; j++) {
             arr[j].state = ElementStates.Changing;
@@ -92,6 +110,11 @@ export const SortingPage: React.FC = () => {
       arr[0].state = ElementStates.Modified;
       arr[1].state = ElementStates.Modified;
       setArray([...arr]);
+      if (order === 'asc') {
+         setIsLoaderAsc(false);
+      } else {
+         setIsLoaderDesc(false);
+      }
    }
 
    return (
@@ -125,6 +148,8 @@ export const SortingPage: React.FC = () => {
                               bubbleSort(array, 'asc')
                            }
                         }}
+                        isLoader={isLoaderAsc}
+                        disabled={isLoaderDesc}
                      />
                      <Button
                         text='По убыванию'
@@ -139,6 +164,8 @@ export const SortingPage: React.FC = () => {
                               bubbleSort(array, 'desc')
                            }
                         }}
+                        isLoader={isLoaderDesc}
+                        disabled={isLoaderAsc}
                      />
                   </div>
                   <Button
@@ -147,6 +174,7 @@ export const SortingPage: React.FC = () => {
                      type='button'
                      style={{ minWidth: '168px' }}
                      onClick={createArray}
+                     disabled={isLoaderAsc || isLoaderDesc}
                   />
                </div>
             </div>
