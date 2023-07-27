@@ -7,6 +7,8 @@ import { ElementStates } from '../../types/element-states';
 import { Circle } from '../ui/circle/circle';
 import { IStackItem } from './types';
 import { Stack } from './utils';
+import { delay } from '../../utils/utils';
+import { DELAY_IN_MS } from '../../constants/delays';
 
 export const StackPage: React.FC = () => {
    const [inputText, setInputText] = useState('');
@@ -16,22 +18,35 @@ export const StackPage: React.FC = () => {
       return new Stack<IStackItem>()
    }, []);
 
-   const pushItem = () => {
+   const pushItem = async () => {
       setInputText('');
-      stack.push({ head: 'top', value: inputText });
+      stack.push({ head: 'top', value: inputText, state: ElementStates.Changing });
       const arr = stack.getItems();
+      if (arr.length > 1) {
+         arr[arr.length - 2].head = ''
+      }
       setArray([...arr])
+      await delay(DELAY_IN_MS);
+      arr[arr.length - 1].state = ElementStates.Default;
+      console.log(arr);
+      setArray([...arr]);
    }
 
-   const popItem = () => {
-      setInputText('');
+   const popItem = async () => {
+      let arr = stack.getItems();
+      arr[arr.length - 1].state = ElementStates.Changing
+      setArray([...arr]);
+      await delay(DELAY_IN_MS);
       stack.pop();
-      const arr = stack.getItems();
+      arr = stack.getItems();
+      if (arr.length >= 1) {
+         arr[arr.length - 1].head = 'top'
+      }
+      console.log(arr)
       setArray([...arr])
    }
 
    const resetItem = () => {
-      setInputText('');
       stack.reset();
       setArray([])
    }
@@ -59,7 +74,7 @@ export const StackPage: React.FC = () => {
                         text='Добавить'
                         type='button'
                         style={{ minWidth: '120px' }}
-                        disabled={!inputText || array.length >= 10}
+                        disabled={!inputText || array.length >= 20}
                         onClick={pushItem}
                      />
                      <Button
@@ -85,10 +100,10 @@ export const StackPage: React.FC = () => {
                   array.map((item, index) => (
                      <Circle
                         key={index}
-                        head={
-                           index === array.length - 1 ? item.head : ''}
+                        head={item.head}
                         index={index}
                         letter={item.value}
+                        state={item.state}
                      />
                   ))
                }
