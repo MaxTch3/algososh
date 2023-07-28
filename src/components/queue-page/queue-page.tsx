@@ -5,31 +5,19 @@ import { Input } from '../ui/input/input';
 import { Button } from '../ui/button/button';
 import { Circle } from '../ui/circle/circle';
 import { Queue } from './utils';
-import { IQueueItem } from './types';
 import { ElementStates } from '../../types/element-states';
 import { lengthQueue } from './constans';
 
-
 export const QueuePage: React.FC = () => {
-   
-   const initialArr = new Array(lengthQueue).fill({state: ElementStates.Default, value: ''});
-
    const [inputText, setInputText] = useState('');
-   const [array, setArray] = useState<IQueueItem[]>(initialArr);
-
-
-   const queue = useMemo(() => {
-      return new Queue(lengthQueue)
-   }, [])
-
- console.log(array)
+   const [queue] = useState(new Queue<string>(lengthQueue));
+   const [array, setArray] = useState<(string | null)[]>(queue.getQueue())
 
    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
       setInputText(e.target.value)
    }, [])
    return (
       <SolutionLayout title='Очередь'>
-
 
          <div className={styles.container}>
             <div className={styles.control_box}>
@@ -72,22 +60,18 @@ export const QueuePage: React.FC = () => {
             </div>
             <div className={styles.array_box}>
                {
-                 array.map((item, index) => (
-                    <Circle
-                       key={index}
-                       head={item.head}
-                       index={index}
-                       letter={item.value}
-                       state={item.state}
-                    />
-                 ))
-              }
+                  array.map((item, index) => (
+                     <Circle
+                        key={index}
+                        //                 head={item.head}
+                        index={index}
+                     //                      letter={item.value}
+                     //                  state={item.state}
+                     />
+                  ))
+               }
             </div>
          </div>
-
-
-
-
 
       </SolutionLayout>
    );
