@@ -1,21 +1,43 @@
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import styles from './queue-page.module.css'
 import { Input } from '../ui/input/input';
 import { Button } from '../ui/button/button';
 import { Circle } from '../ui/circle/circle';
 import { Queue } from './utils';
-import { ElementStates } from '../../types/element-states';
 import { lengthQueue } from './constans';
 
 export const QueuePage: React.FC = () => {
    const [inputText, setInputText] = useState('');
-   const [queue] = useState(new Queue<string>(lengthQueue));
-   const [array, setArray] = useState<(string | null)[]>(queue.getQueue())
+   const [array, setArray] = useState<(string | undefined)[]>();
 
-   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+   const queue = useMemo(() => {
+      return new Queue<string>(lengthQueue)
+   }, []);
+
+   useEffect(() => {
+      setArray(queue.getQueue())
+   }, [queue])
+
+   const enqueueItem = () => {
+      queue.enqueue(inputText);
+      setArray([...queue.getQueue()])
+   }
+
+   const dequeueItem = () => {
+      queue.dequeue();
+      setArray([...queue.getQueue()])
+   }
+
+   const resetItems = () => {
+      queue.reset();
+      setArray([...queue.getQueue()])
+   }
+
+   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
       setInputText(e.target.value)
-   }, [])
+   }
+
    return (
       <SolutionLayout title='Очередь'>
 
@@ -37,15 +59,15 @@ export const QueuePage: React.FC = () => {
                         type='button'
                         style={{ minWidth: '120px' }}
                         disabled={!inputText}
-                     //                  onClick={pushItem}
+                        onClick={enqueueItem}
                      //                  isLoader={isLoadingPush}
                      />
                      <Button
                         text='Удалить'
                         type='button'
                         style={{ minWidth: '110px' }}
-                     //                  disabled={array.length === 0 || isLoadingPush}
-                     //                 onClick={popItem}
+                        //                  disabled={array.length === 0 || isLoadingPush}
+                        onClick={dequeueItem}
                      />
                   </div>
                   <Button
@@ -53,19 +75,19 @@ export const QueuePage: React.FC = () => {
                      text='Очистить'
                      type='button'
                      style={{ minWidth: '120px' }}
-                  //                disabled={array.length === 0 || isLoadingPush || isLoadingPop}
-                  //               onClick={resetItem}
+                     //                disabled={array.length === 0 || isLoadingPush || isLoadingPop}
+                     onClick={resetItems}
                   />
                </div>
             </div>
             <div className={styles.array_box}>
-               {
+               {array &&
                   array.map((item, index) => (
                      <Circle
                         key={index}
                         //                 head={item.head}
                         index={index}
-                     //                      letter={item.value}
+                        letter={item}
                      //                  state={item.state}
                      />
                   ))

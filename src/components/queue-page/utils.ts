@@ -1,7 +1,7 @@
 import { IQueue } from './types';
 
 export class Queue<T> implements IQueue<T> {
-   private container: (T | null)[] = [];
+   private container: (T | undefined)[] = [];
    private head = 0;
    private tail = 0;
    private readonly size: number = 0;
@@ -24,18 +24,18 @@ export class Queue<T> implements IQueue<T> {
 
    dequeue = () => {
       if (this.head === (this.size - 1)) {
-         this.container[this.head % this.size] = null;
+         this.container[this.head % this.size] = undefined;
          return this
       } else {
-         if (this.length === 0) {
-            this.container[this.head] = null;
+         if (this.length !== 0) {
+            this.container[this.head % this.size] = undefined;
             this.head++;
             this.length--;
          }
       }
    };
 
-   getQueue = (): (T | null)[] => { return [...this.container]};
+   getQueue = (): (T | undefined)[] => { return [...this.container] };
 
    getHead = () => this.head;
 
