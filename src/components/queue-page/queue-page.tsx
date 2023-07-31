@@ -6,22 +6,39 @@ import { Button } from '../ui/button/button';
 import { Circle } from '../ui/circle/circle';
 import { Queue } from './utils';
 import { lengthQueue } from './constans';
+import { ElementStates } from '../../types/element-states';
+import { delay } from '../../utils/utils';
+import { DELAY_IN_MS } from '../../constants/delays';
+
+interface IQueueItem  {
+   state?: ElementStates;
+   value: string;
+}
 
 export const QueuePage: React.FC = () => {
    const [inputText, setInputText] = useState('');
-   const [array, setArray] = useState<(string | undefined)[]>();
+   const [array, setArray] = useState<(IQueueItem | undefined)[]>();
+   const [tail, setTail] = useState<number>()
 
    const queue = useMemo(() => {
-      return new Queue<string>(lengthQueue)
+      return new Queue<IQueueItem>(lengthQueue)
    }, []);
 
    useEffect(() => {
-      setArray(queue.getQueue())
+      setArray(queue.getQueue());
+      setTail(queue.getTail());
    }, [queue])
 
-   const enqueueItem = () => {
-      queue.enqueue(inputText);
-      setArray([...queue.getQueue()])
+   const enqueueItem = async () => {
+      const currArr = queue.getQueue();
+      if (queue.getTail() < lengthQueue) {currArr[queue.getTail()] = { state: ElementStates.Changing, value: inputText };}
+      setArray(currArr)
+      await delay(DELAY_IN_MS);
+      queue.enqueue({ value: inputText });
+      setInputText('');
+      setTail(queue.getTail())
+      setArray([...queue.getQueue()]);
+
    }
 
    const dequeueItem = () => {
@@ -58,7 +75,7 @@ export const QueuePage: React.FC = () => {
                         text='Добавить'
                         type='button'
                         style={{ minWidth: '120px' }}
-                        disabled={!inputText}
+                        disabled={!inputText || tail === array?.length}
                         onClick={enqueueItem}
                      //                  isLoader={isLoadingPush}
                      />
@@ -87,8 +104,8 @@ export const QueuePage: React.FC = () => {
                         key={index}
                         //                 head={item.head}
                         index={index}
-                        letter={item}
-                     //                  state={item.state}
+                        letter={item?.value}
+                                      state={item?.state}
                      />
                   ))
                }
