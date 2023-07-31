@@ -9,16 +9,13 @@ import { lengthQueue } from './constans';
 import { ElementStates } from '../../types/element-states';
 import { delay } from '../../utils/utils';
 import { DELAY_IN_MS } from '../../constants/delays';
-
-interface IQueueItem  {
-   state?: ElementStates;
-   value: string;
-}
+import { IQueueItem } from './types';
 
 export const QueuePage: React.FC = () => {
    const [inputText, setInputText] = useState('');
    const [array, setArray] = useState<(IQueueItem | undefined)[]>();
-   const [tail, setTail] = useState<number>()
+   const [tail, setTail] = useState<number>();
+   const [head, setHead] = useState<number>();
 
    const queue = useMemo(() => {
       return new Queue<IQueueItem>(lengthQueue)
@@ -27,27 +24,36 @@ export const QueuePage: React.FC = () => {
    useEffect(() => {
       setArray(queue.getQueue());
       setTail(queue.getTail());
-   }, [queue])
+   }, [queue]);
 
    const enqueueItem = async () => {
-      const currArr = queue.getQueue();
-      if (queue.getTail() < lengthQueue) {currArr[queue.getTail()] = { state: ElementStates.Changing, value: inputText };}
+      if (currTail < lengthQueue) { currArr[currTail] = { state: ElementStates.Changing, value: inputText }; }
       setArray(currArr)
       await delay(DELAY_IN_MS);
       queue.enqueue({ value: inputText });
       setInputText('');
       setTail(queue.getTail())
       setArray([...queue.getQueue()]);
-
    }
 
-   const dequeueItem = () => {
-      queue.dequeue();
-      setArray([...queue.getQueue()])
+   const dequeueItem = async () => {
+      if (currHead >= 0 && currHead < currTail && currHead < lengthQueue) {
+         currArr[currHead] = { state: ElementStates.Changing, value: currArr[currHead]!.value }
+         setArray(currArr)
+         await delay(DELAY_IN_MS);
+         queue.dequeue();
+         setArray([...queue.getQueue()]);
+      }
    }
+
+   const currArr = useMemo(() => queue.getQueue(), [enqueueItem, dequeueItem]);
+   const currTail = useMemo(() => queue.getTail(), [enqueueItem, dequeueItem]);
+   const currHead = useMemo(() => queue.getHead(), [enqueueItem, dequeueItem]);
 
    const resetItems = () => {
+      setInputText('');
       queue.reset();
+      setTail(0);
       setArray([...queue.getQueue()])
    }
 
@@ -57,7 +63,6 @@ export const QueuePage: React.FC = () => {
 
    return (
       <SolutionLayout title='Очередь'>
-
          <div className={styles.container}>
             <div className={styles.control_box}>
                <Input
@@ -75,7 +80,7 @@ export const QueuePage: React.FC = () => {
                         text='Добавить'
                         type='button'
                         style={{ minWidth: '120px' }}
-                        disabled={!inputText || tail === array?.length}
+                        disabled={!inputText || tail === lengthQueue}
                         onClick={enqueueItem}
                      //                  isLoader={isLoadingPush}
                      />
@@ -105,13 +110,12 @@ export const QueuePage: React.FC = () => {
                         //                 head={item.head}
                         index={index}
                         letter={item?.value}
-                                      state={item?.state}
+                        state={item?.state}
                      />
                   ))
                }
             </div>
          </div>
-
       </SolutionLayout>
    );
 };

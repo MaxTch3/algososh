@@ -16,18 +16,19 @@ export class Queue<T> implements IQueue<T> {
       if (this.length >= this.size) {
          throw new Error('Maximum length exceeded');
       }
-      if (this.tail === this.size) { return this }
-      this.container[this.tail % this.size] = item;
-      this.tail++;
-      this.length++;
+      if (this.tail < this.size) {
+         this.container[this.tail % this.size] = item;
+         this.tail++;
+         this.length++;
+      }
+
    };
 
    dequeue = () => {
-      if (this.head === (this.size - 1)) {
+      if (this.head === this.size) {
          this.container[this.head % this.size] = undefined;
-         return this
       } else {
-         if (this.length !== 0) {
+         if (this.length > 0) {
             this.container[this.head % this.size] = undefined;
             this.head++;
             this.length--;
