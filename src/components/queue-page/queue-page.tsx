@@ -43,6 +43,7 @@ export const QueuePage: React.FC = () => {
          await delay(DELAY_IN_MS);
          queue.dequeue();
          setArray([...queue.getQueue()]);
+         setHead(queue.getHead())
       }
    }
 
@@ -90,6 +91,7 @@ export const QueuePage: React.FC = () => {
                         style={{ minWidth: '110px' }}
                         //                  disabled={array.length === 0 || isLoadingPush}
                         onClick={dequeueItem}
+                        disabled={tail === 0 || head === tail}
                      />
                   </div>
                   <Button
