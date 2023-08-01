@@ -16,36 +16,29 @@ export class Queue<T> implements IQueue<T> {
       if (this.length >= this.size) {
          throw new Error('Maximum length exceeded');
       }
-      if (this.tail < this.size) {
-         this.container[this.tail % this.size] = item;
-         this.tail++;
-         this.length++;
-      }
-
+      this.container[this.tail % this.size] = item;
+      this.tail++;
+      this.length++;
    };
 
    dequeue = () => {
-      if (this.head === this.size) {
-         this.container[this.head % this.size] = undefined;
-      } else {
-         if (this.length > 0) {
-            this.container[this.head % this.size] = undefined;
-            this.head++;
-            this.length--;
-         }
+      if (this.isEmpty()) {
+         throw new Error('No elements in the queue');
       }
+      this.container[this.head] = undefined;
+      this.head++;
+      this.length--;
    };
 
-   getQueue = (): (T | undefined)[] => { return [...this.container] };
+   reset = () => {
+      this.tail = 0;
+      this.head = 0;
+      this.length = 0;
+      this.container = Array(this.size)
+   }
 
    getHead = () => this.head;
-
    getTail = () => this.tail;
-
-   reset = (): void => {
-      this.container = Array(this.size);
-      this.head = 0;
-      this.tail = 0;
-   };
-
+   getQueue = () => [...this.container];
+   isEmpty = () => this.length === 0;
 }

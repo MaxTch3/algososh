@@ -1,1 +1,1 @@
-export const lengthQueue: number = 3;
+export const lengthQueue: number = 7;

@@ -1,4 +1,4 @@
-import { ElementStates } from "../../types/element-states";
+import { ElementStates } from '../../types/element-states';
 
 export interface IQueue<T> {
    enqueue: (item: T) => void;
@@ -8,5 +8,5 @@ export interface IQueue<T> {
 
 export interface IQueueItem {
    state?: ElementStates;
-   value: string;
+   value?: string;
 }

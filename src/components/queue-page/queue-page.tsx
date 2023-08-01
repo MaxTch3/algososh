@@ -8,42 +8,56 @@ import { Queue } from './utils';
 import { lengthQueue } from './constans';
 import { ElementStates } from '../../types/element-states';
 import { delay } from '../../utils/utils';
-import { DELAY_IN_MS } from '../../constants/delays';
+import { SHORT_DELAY_IN_MS } from '../../constants/delays';
 import { IQueueItem } from './types';
 
 export const QueuePage: React.FC = () => {
    const [inputText, setInputText] = useState('');
    const [array, setArray] = useState<(IQueueItem | undefined)[]>();
-   const [tail, setTail] = useState<number>();
-   const [head, setHead] = useState<number>();
+   const [tail, setTail] = useState<number | undefined>();
+   const [head, setHead] = useState<number | undefined>();
+   const [isLoadingEnqueue, setIsLoadingEnqueue] = useState(false);
+   const [isLoadingDequeue, setIsLoadingDequeue] = useState(false);
 
    const queue = useMemo(() => {
       return new Queue<IQueueItem>(lengthQueue)
    }, []);
 
    useEffect(() => {
-      setArray(queue.getQueue());
-      setTail(queue.getTail());
+      setArray(queue.getQueue())
    }, [queue]);
 
    const enqueueItem = async () => {
-      if (currTail < lengthQueue) { currArr[currTail] = { state: ElementStates.Changing, value: inputText }; }
-      setArray(currArr)
-      await delay(DELAY_IN_MS);
-      queue.enqueue({ value: inputText });
+      setIsLoadingEnqueue(true);
       setInputText('');
-      setTail(queue.getTail())
+      if (currTail < lengthQueue) { currArr[currTail] = { state: ElementStates.Changing } };
+      setArray(currArr);
+      await delay(SHORT_DELAY_IN_MS);
+      queue.enqueue({ value: inputText });
+      setTail(queue.getTail());
+      setHead(queue.getHead());
       setArray([...queue.getQueue()]);
+      setIsLoadingEnqueue(false);
    }
 
    const dequeueItem = async () => {
+      setIsLoadingDequeue(true);
+      if (currHead === currTail - 1) {
+         currArr[currHead] = { state: ElementStates.Changing, value: currArr[currHead]!.value };
+         setArray(currArr);
+         await delay(SHORT_DELAY_IN_MS);
+         setIsLoadingDequeue(false);
+         return resetItems()
+      }
       if (currHead >= 0 && currHead < currTail && currHead < lengthQueue) {
-         currArr[currHead] = { state: ElementStates.Changing, value: currArr[currHead]!.value }
-         setArray(currArr)
-         await delay(DELAY_IN_MS);
+         currArr[currHead] = { state: ElementStates.Changing, value: currArr[currHead]!.value };
+         setArray(currArr);
+         await delay(SHORT_DELAY_IN_MS);
          queue.dequeue();
          setArray([...queue.getQueue()]);
-         setHead(queue.getHead())
+         setHead(queue.getHead());
+         setTail(queue.getTail());
+         setIsLoadingDequeue(false);
       }
    }
 
@@ -54,7 +68,8 @@ export const QueuePage: React.FC = () => {
    const resetItems = () => {
       setInputText('');
       queue.reset();
-      setTail(0);
+      setTail(undefined);
+      setHead(undefined);
       setArray([...queue.getQueue()])
    }
 
@@ -81,17 +96,17 @@ export const QueuePage: React.FC = () => {
                         text='Добавить'
                         type='button'
                         style={{ minWidth: '120px' }}
-                        disabled={!inputText || tail === lengthQueue}
+                        disabled={!inputText || tail === lengthQueue || isLoadingDequeue}
                         onClick={enqueueItem}
-                     //                  isLoader={isLoadingPush}
+                        isLoader={isLoadingEnqueue}
                      />
                      <Button
                         text='Удалить'
                         type='button'
                         style={{ minWidth: '110px' }}
-                        //                  disabled={array.length === 0 || isLoadingPush}
                         onClick={dequeueItem}
-                        disabled={tail === 0 || head === tail}
+                        disabled={tail === 0 || head === lengthQueue || tail === head || isLoadingEnqueue}
+                        isLoader={isLoadingDequeue}
                      />
                   </div>
                   <Button
@@ -99,7 +114,7 @@ export const QueuePage: React.FC = () => {
                      text='Очистить'
                      type='button'
                      style={{ minWidth: '120px' }}
-                     //                disabled={array.length === 0 || isLoadingPush || isLoadingPop}
+                     disabled={tail === undefined || isLoadingEnqueue || isLoadingDequeue}
                      onClick={resetItems}
                   />
                </div>
@@ -109,7 +124,8 @@ export const QueuePage: React.FC = () => {
                   array.map((item, index) => (
                      <Circle
                         key={index}
-                        //                 head={item.head}
+                        tail={index === tail! - 1 ? 'tail' : ''}
+                        head={head === undefined ? '' : index === head ? 'head' : ''}
                         index={index}
                         letter={item?.value}
                         state={item?.state}
