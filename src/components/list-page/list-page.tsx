@@ -1,12 +1,12 @@
-import React from "react";
-import { SolutionLayout } from "../ui/solution-layout/solution-layout";
-import { Input } from "../ui/input/input";
-import { Button } from "../ui/button/button";
+import React from 'react';
+import { SolutionLayout } from '../ui/solution-layout/solution-layout';
+import { Input } from '../ui/input/input';
+import { Button } from '../ui/button/button';
 import styles from './list-page.module.css'
 
 export const ListPage: React.FC = () => {
    return (
-      <SolutionLayout title="Связный список">
+      <SolutionLayout title='Связный список'>
          <div className={styles.container}>
             <div className={styles.control_box}>
                <Input
