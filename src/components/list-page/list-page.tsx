@@ -38,7 +38,6 @@ export const ListPage: React.FC = () => {
                   placeholder='Введите индекс'
                   type='text'
                   maxLength={4}
-                  isLimitText={false}
                   style={{ maxWidth: '204px' }}
                />
                <Button
