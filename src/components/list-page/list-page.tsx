@@ -1,10 +1,16 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';
 import { Button } from '../ui/button/button';
 import styles from './list-page.module.css'
+import { Circle } from '../ui/circle/circle';
+import { List } from './utils';
+import { startingArray } from './constants';
 
 export const ListPage: React.FC = () => {
+   const list = useMemo(() => {
+      return new List<string>(startingArray)
+   }, []);
    return (
       <SolutionLayout title='Связный список'>
          <div className={styles.container}>
@@ -48,6 +54,18 @@ export const ListPage: React.FC = () => {
                   text='Удалить по индексу'
                   style={{ minWidth: '362px' }}
                />
+            </div>
+            <div className={styles.array_box}>
+               {/* {array &&
+                  array.map((item, index) => (
+                     <Circle
+                        key={index}
+                        index={index}
+                        letter={item?.value}
+                        state={item?.state}
+                     />
+                  ))
+               } */}
             </div>
          </div>
       </SolutionLayout >

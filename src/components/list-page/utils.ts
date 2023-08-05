@@ -1,16 +1,19 @@
-import { Node } from './types';
+import { IList, ListNode } from './types';
 
-export class List<T> {
-   head: Node<T> | null;
-   tail: Node<T> | null;
+export class List<T> implements IList<T>{
+   head: ListNode<T> | null;
+   tail: ListNode<T> | null;
 
-   constructor() {
+   constructor(startingArray: T[]) {
       this.head = null;
-      this.tail = null
+      this.tail = null;
+      if (startingArray.length) {
+         startingArray.map((item) => this.push(item));
+      }
    }
 
    push = (value: T) => {
-      const newNode = new Node(value);
+      const newNode = new ListNode(value);
       if (this.isEmpty()) {
          this.head = newNode;
          this.tail = newNode
@@ -21,7 +24,7 @@ export class List<T> {
    }
 
    unshift = (value: T) => {
-      const newNode = new Node(value);
+      const newNode = new ListNode(value);
       if (this.isEmpty()) {
          this.head = newNode;
          this.tail = newNode
@@ -40,7 +43,7 @@ export class List<T> {
          this.unshift(value);
          return
       };
-      const newNode = new Node(value);
+      const newNode = new ListNode(value);
       let count = 0;
       let currNode = this.head;
       let prevNode = null;
