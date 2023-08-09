@@ -10,6 +10,16 @@ export class List<T> implements IList<T>{
       if (startingArray.length) {
          startingArray.map((item) => this.push(item));
       }
+   };
+
+   toArray = (): T[] => {
+      const result: T[] = [];
+      let currNode = this.head;
+      while (currNode !== null) {
+         result.push(currNode.value);
+         currNode = currNode.next;
+      };
+      return result;
    }
 
    push = (value: T) => {

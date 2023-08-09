@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';
 import { Button } from '../ui/button/button';
@@ -6,9 +6,11 @@ import styles from './list-page.module.css'
 import { Circle } from '../ui/circle/circle';
 import { List } from './utils';
 import { startingArray } from './constants';
+import { ArrowIcon } from '../ui/icons/arrow-icon';
 
 export const ListPage: React.FC = () => {
-   const list = useMemo(() => {
+   const [arrString, setArrString] = useState<string[]>(startingArray);
+   const listString = useMemo(() => {
       return new List<string>(startingArray)
    }, []);
    return (
@@ -56,16 +58,20 @@ export const ListPage: React.FC = () => {
                />
             </div>
             <div className={styles.array_box}>
-               {/* {array &&
-                  array.map((item, index) => (
-                     <Circle
-                        key={index}
-                        index={index}
-                        letter={item?.value}
-                        state={item?.state}
-                     />
+               {arrString &&
+                  arrString.map((item, index) => (
+                     <div className={styles.item_box}>
+                        <Circle
+                           key={index}
+                           index={index}
+                           letter={item}
+                        />
+                        {index < arrString.length - 1 &&
+                           <ArrowIcon />
+                        }
+                     </div>
                   ))
-               } */}
+               }
             </div>
          </div>
       </SolutionLayout >
