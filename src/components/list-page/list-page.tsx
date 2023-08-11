@@ -96,7 +96,7 @@ export const ListPage: React.FC = () => {
       setIsFunction(ListFunction.None);
       setIsLoadingDeleteHead(false);
    };
-   
+
 
    const deleteTail = async () => {
       setIsLoadingDeleteTail(true);
@@ -223,14 +223,14 @@ export const ListPage: React.FC = () => {
                         <Circle
                            head={
                               insertIndex === index &&
-                              (isFunction === ListFunction.AddHead || isFunction === ListFunction.AddTail || isFunction === ListFunction.InsertAtIndex)
-                              ? <Circle isSmall letter={inputText} state={ElementStates.Changing} />
+                                 (isFunction === ListFunction.AddHead || isFunction === ListFunction.AddTail || isFunction === ListFunction.InsertAtIndex)
+                                 ? <Circle isSmall letter={inputText} state={ElementStates.Changing} />
                                  : index === 0 ? 'head' : ''
                            }
                            tail={
                               insertIndex === index &&
-                              (isFunction === ListFunction.DeleteHead || isFunction === ListFunction.DeleteTail)
-                              ? <Circle isSmall letter={item} state={ElementStates.Changing} />
+                                 (isFunction === ListFunction.DeleteHead || isFunction === ListFunction.DeleteTail)
+                                 ? <Circle isSmall letter={item} state={ElementStates.Changing} />
                                  : index === arrString.length - 1 ? 'tail' : ''
                            }
                            index={index}
