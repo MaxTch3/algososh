@@ -8,7 +8,7 @@ import { Circle } from '../ui/circle/circle';
 import { IStackItem } from './types';
 import { Stack } from './utils';
 import { delay } from '../../utils/utils';
-import { DELAY_IN_MS } from '../../constants/delays';
+import { SHORT_DELAY_IN_MS } from '../../constants/delays';
 
 export const StackPage: React.FC = () => {
    const [inputText, setInputText] = useState('');
@@ -29,7 +29,7 @@ export const StackPage: React.FC = () => {
          arr[arr.length - 2].head = ''
       };
       setArray([...arr]);
-      await delay(DELAY_IN_MS);
+      await delay(SHORT_DELAY_IN_MS);
       arr[arr.length - 1].state = ElementStates.Default;
       setArray([...arr]);
       setIsLoadingPush(false);
@@ -40,7 +40,7 @@ export const StackPage: React.FC = () => {
       let arr = stack.getItems();
       arr[arr.length - 1].state = ElementStates.Changing
       setArray([...arr]);
-      await delay(DELAY_IN_MS);
+      await delay(SHORT_DELAY_IN_MS);
       stack.pop();
       arr = stack.getItems();
       if (arr.length >= 1) {
@@ -88,6 +88,7 @@ export const StackPage: React.FC = () => {
                         style={{ minWidth: '110px' }}
                         disabled={array.length === 0 || isLoadingPush}
                         onClick={popItem}
+                        isLoader={isLoadingPop}
                      />
                   </div>
                   <Button

@@ -105,9 +105,7 @@ export class List<T> implements IList<T>{
          currNode = currNode.next;
       };
       return count
-   }
+   };
 
-   isEmpty = (): boolean => this.head === null;
-   removeHead = () => { this.deleteAt(0) };
-   removeTail = () => { this.deleteAt(this.size() - 1) };
+   isEmpty = (): boolean => this.head === null
 }

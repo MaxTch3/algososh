@@ -157,6 +157,12 @@ export const ListPage: React.FC = () => {
                   style={{ maxWidth: '204px' }}
                   onChange={handleChangeText}
                   value={inputText}
+                  disabled={isLoadingAddHead
+                     || isLoadingAddTail
+                     || isLoadingDeleteHead
+                     || isLoadingDeleteTail
+                     || isLoadingInsertAtIndex
+                     || isLoadingDeleteAtIndex}
                />
                <Button
                   text='Добавить&nbsp;в&nbsp;head'
@@ -215,6 +221,12 @@ export const ListPage: React.FC = () => {
                   style={{ maxWidth: '204px' }}
                   value={inputIndex}
                   onChange={handleChangeIndex}
+                  disabled={isLoadingAddHead
+                     || isLoadingAddTail
+                     || isLoadingDeleteHead
+                     || isLoadingDeleteTail
+                     || isLoadingInsertAtIndex
+                     || isLoadingDeleteAtIndex}
                />
                <Button
                   text='Добавить по индексу'
