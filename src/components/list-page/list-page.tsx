@@ -11,7 +11,7 @@ import { delay } from '../../utils/utils';
 import { DELAY_IN_MS } from '../../constants/delays';
 import { ElementStates } from '../../types/element-states';
 
-enum ListFunction { AddHead, AddTail, DeleteHead, DeleteTail, InsertAtIndex, None }
+enum ListFunction { AddHead, AddTail, DeleteHead, DeleteTail, InsertAtIndex, DeleteAtIndex, None }
 
 export const ListPage: React.FC = () => {
    const [arrString, setArrString] = useState<string[]>(startingArray);
@@ -25,6 +25,8 @@ export const ListPage: React.FC = () => {
    const [isLoadingDeleteHead, setIsLoadingDeleteHead] = useState(false);
    const [isLoadingDeleteTail, setIsLoadingDeleteTail] = useState(false);
    const [isLoadingInsertAtIndex, setIsLoadingInsertAtIndex] = useState(false);
+   const [isLoadingDeleteAtIndex, setIsLoadingDeleteAtIndex] = useState(false);
+
    const [isFunction, setIsFunction] = useState<ListFunction>(ListFunction.None);
 
    const listString = useMemo(() => {
@@ -53,7 +55,7 @@ export const ListPage: React.FC = () => {
       setIsFunction(ListFunction.InsertAtIndex);
       for (let i = 0; i <= index; i++) {
          setInsertIndex(i);
-         setChangedIndex(i)
+         setChangedIndex(i);
          await delay(DELAY_IN_MS);
       };
       listString.insertAt(inputText, Number(inputIndex));
@@ -92,11 +94,29 @@ export const ListPage: React.FC = () => {
       await delay(DELAY_IN_MS);
       listString.deleteAt(0);
       setInsertIndex(NaN);
-      setArrString(listString.toArray());
+      setArrString(listString.toArray);
       setIsFunction(ListFunction.None);
       setIsLoadingDeleteHead(false);
    };
 
+   const deleteAtIndex = async () => {
+      const index = Number(inputIndex);
+      setInputIndex('');
+      setIsLoadingDeleteAtIndex(true);
+      setIsFunction(ListFunction.DeleteAtIndex);
+      for (let i = 0; i <= index; i++) {
+         setChangedIndex(i);
+         await delay(DELAY_IN_MS);
+      };
+      setInsertIndex(index);
+      await delay(DELAY_IN_MS);
+      setInsertIndex(NaN);
+      listString.deleteAt(index);
+      setArrString(listString.toArray());
+      setChangedIndex(NaN);
+      setIsFunction(ListFunction.None);
+      setIsLoadingDeleteAtIndex(false)
+   }
 
    const deleteTail = async () => {
       setIsLoadingDeleteTail(true);
@@ -147,7 +167,8 @@ export const ListPage: React.FC = () => {
                      || isLoadingAddTail
                      || isLoadingDeleteHead
                      || isLoadingDeleteTail
-                     || isLoadingInsertAtIndex}
+                     || isLoadingInsertAtIndex
+                     || isLoadingDeleteAtIndex}
                />
                <Button
                   text='Добавить в tail'
@@ -158,7 +179,8 @@ export const ListPage: React.FC = () => {
                      || isLoadingAddHead
                      || isLoadingDeleteHead
                      || isLoadingDeleteTail
-                     || isLoadingInsertAtIndex}
+                     || isLoadingInsertAtIndex
+                     || isLoadingDeleteAtIndex}
                />
                <Button
                   text='Удалить&nbsp;из&nbsp;head'
@@ -167,7 +189,8 @@ export const ListPage: React.FC = () => {
                      || isLoadingAddHead
                      || isLoadingAddTail
                      || isLoadingDeleteTail
-                     || isLoadingInsertAtIndex}
+                     || isLoadingInsertAtIndex
+                     || isLoadingDeleteAtIndex}
                   onClick={deleteHead}
                   isLoader={isLoadingDeleteHead}
                />
@@ -178,7 +201,8 @@ export const ListPage: React.FC = () => {
                      || isLoadingAddHead
                      || isLoadingAddTail
                      || isLoadingDeleteHead
-                     || isLoadingInsertAtIndex}
+                     || isLoadingInsertAtIndex
+                     || isLoadingDeleteAtIndex}
                   onClick={deleteTail}
                   isLoader={isLoadingDeleteTail}
                />
@@ -200,7 +224,8 @@ export const ListPage: React.FC = () => {
                      || isLoadingAddHead
                      || isLoadingAddTail
                      || isLoadingDeleteHead
-                     || isLoadingDeleteTail}
+                     || isLoadingDeleteTail
+                     || isLoadingDeleteAtIndex}
                   onClick={insertAtIndex}
                   isLoader={isLoadingInsertAtIndex}
                />
@@ -214,6 +239,8 @@ export const ListPage: React.FC = () => {
                      || isLoadingDeleteHead
                      || isLoadingDeleteTail
                      || isLoadingInsertAtIndex}
+                  onClick={deleteAtIndex}
+                  isLoader={isLoadingDeleteAtIndex}
                />
             </div>
             <div className={styles.array_box}>
@@ -223,22 +250,39 @@ export const ListPage: React.FC = () => {
                         <Circle
                            head={
                               insertIndex === index &&
-                                 (isFunction === ListFunction.AddHead || isFunction === ListFunction.AddTail || isFunction === ListFunction.InsertAtIndex)
+                                 (isFunction === ListFunction.AddHead
+                                    || isFunction === ListFunction.AddTail
+                                    || isFunction === ListFunction.InsertAtIndex)
                                  ? <Circle isSmall letter={inputText} state={ElementStates.Changing} />
                                  : index === 0 ? 'head' : ''
                            }
                            tail={
                               insertIndex === index &&
-                                 (isFunction === ListFunction.DeleteHead || isFunction === ListFunction.DeleteTail)
+                                 (isFunction === ListFunction.DeleteHead
+                                    || isFunction === ListFunction.DeleteTail
+                                    || isFunction === ListFunction.DeleteAtIndex
+                                 )
                                  ? <Circle isSmall letter={item} state={ElementStates.Changing} />
                                  : index === arrString.length - 1 ? 'tail' : ''
                            }
                            index={index}
-                           letter={(isFunction === ListFunction.DeleteHead || isFunction === ListFunction.DeleteTail) && insertIndex === index ? '' : item}
-                           state={isFunction === ListFunction.InsertAtIndex &&
-                              index < changedIndex
-                              ? ElementStates.Changing : modifiedIndex === index
-                                 ? ElementStates.Modified : ElementStates.Default}
+                           letter={
+                              (isFunction === ListFunction.DeleteHead
+                                 || isFunction === ListFunction.DeleteTail
+                                 || isFunction === ListFunction.DeleteAtIndex) &&
+                                 insertIndex === index
+                                 ? '' : item
+                           }
+                           state={
+                              isFunction === ListFunction.DeleteAtIndex &&
+                                 index <= changedIndex
+                                 ? ElementStates.Changing
+                                 : isFunction === ListFunction.InsertAtIndex &&
+                                    index < changedIndex
+                                    ? ElementStates.Changing
+                                    : modifiedIndex === index
+                                       ? ElementStates.Modified : ElementStates.Default
+                           }
                         />
                         {index < arrString.length - 1 &&
                            <ArrowIcon />
