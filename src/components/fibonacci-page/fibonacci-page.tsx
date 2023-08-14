@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Button } from '../ui/button/button';
 import styles from './fibonacci-page.module.css'
@@ -29,19 +29,20 @@ export const FibonacciPage: React.FC = () => {
       setIsLoader(false)
    }
 
-   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+   const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
       if (
          +e.target.value >= minNumber &&
          +e.target.value <= maxNumber
       ) {
          setInputText(e.target.value);
       }
-   }
-   const handleClick = () => {
-      fibonacciArray(Number(inputText))
-   }
+   }, []);
 
-   const handleKeyDown = (e: React.KeyboardEvent<HTMLElement>) => {
+   const handleClick = useCallback(() => {
+      fibonacciArray(Number(inputText))
+   }, [inputText])
+
+   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLElement>) => {
       if (
          e.key !== 'Backspace' &&
          e.key !== 'Tab' &&
@@ -52,7 +53,7 @@ export const FibonacciPage: React.FC = () => {
       ) {
          e.preventDefault();
       }
-   }
+   }, [])
 
    useEffect(() => {
       return () => {
