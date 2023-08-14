@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Button } from '../ui/button/button';
 import styles from './fibonacci-page.module.css'
@@ -6,6 +6,7 @@ import { Input } from '../ui/input/input';
 import { Circle } from '../ui/circle/circle';
 import { SHORT_DELAY_IN_MS } from '../../constants/delays';
 import { delay } from '../../utils/utils';
+import { getFibonacciArraySteps } from './utils';
 
 export const FibonacciPage: React.FC = () => {
    const minNumber = 0;
@@ -16,21 +17,16 @@ export const FibonacciPage: React.FC = () => {
 
    const fibonacciArray = async (n: number) => {
       setIsLoader(true);
-      const fibArray: number[] = [];
-      for (let i = 0; i <= n; i++) {
-         if (i === 0) {
-            fibArray.push(1)
+      const fibonacciArraySteps = getFibonacciArraySteps(n);
+      if (n) {
+         for (let step of fibonacciArraySteps) {
+            setArray(step);
+            await delay(SHORT_DELAY_IN_MS)
          }
-         if (i === 1) {
-            fibArray.push(1)
-         }
-         if (i >= 2) {
-            fibArray.push(fibArray[i - 1] + fibArray[i - 2]);
-         }
-         setArray([...fibArray])
-         await delay(SHORT_DELAY_IN_MS);
-      }
-      setIsLoader(false);
+      } else {
+         setArray(fibonacciArraySteps[0])
+      };
+      setIsLoader(false)
    }
 
    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,6 +53,12 @@ export const FibonacciPage: React.FC = () => {
          e.preventDefault();
       }
    }
+
+   useEffect(() => {
+      return () => {
+         setIsLoader(false);
+      }
+   }, [])
 
    return (
       <SolutionLayout title='Последовательность Фибоначчи'>
