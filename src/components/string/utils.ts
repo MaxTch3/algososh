@@ -17,3 +17,12 @@ export const getLetterState = (length: number, currIndex: number, start: number 
       }
    }
 }
+
+export function getReversingStringSteps(sourceArray: string[]): string[][] {
+   const reversingStringSteps = [[...sourceArray]];
+   for (let i = 0; i < sourceArray.length - i - 1; i++) {
+      swap(sourceArray, i, sourceArray.length - i - 1);
+      reversingStringSteps.push([...sourceArray])
+   }
+   return reversingStringSteps
+} 

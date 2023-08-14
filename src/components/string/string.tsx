@@ -4,8 +4,9 @@ import { Input } from '../ui/input/input';
 import { Button } from '../ui/button/button';
 import styles from './string.module.css'
 import { Circle } from '../ui/circle/circle';
-import { getLetterState, swap } from './utils';
+import { getLetterState, getReversingStringSteps } from './utils';
 import { DELAY_IN_MS } from '../../constants/delays';
+import { delay } from '../../utils/utils';
 
 export const StringComponent: React.FC = () => {
    const [inputText, setInputText] = useState('');
@@ -14,35 +15,36 @@ export const StringComponent: React.FC = () => {
    const [start, setStart] = useState<number | null>();
    const [end, setEnd] = useState<number | null>();
 
-   const reverseLine = useCallback((arr: string[], start = 0, end = arr.length - 1) => {
+   const reverseLine = async (inputText: string) => {
       setIsLoader(true);
-      setStart(start);
-      setEnd(end)
-
-      if (start < end) {
-         setTimeout(() => {
-            start++;
-            end--;
-            swap(arr, start - 1, end + 1);
-            setLetters([...arr])
-            reverseLine(arr, start, end)
-         }, DELAY_IN_MS);
+      const arr = inputText.split('');
+      const reversingStringSteps = getReversingStringSteps(arr)
+      let start = 0;
+      let end = arr.length - 1
+      if (arr.length !== 1) {
+         for (let step of reversingStringSteps) {
+            if (start <= end + 1) {
+               setStart(start);
+               setEnd(end);
+               setLetters(step);
+               await delay(DELAY_IN_MS);
+               start++;
+               end--
+            }
+         }
       } else {
-         setIsLoader(false);
+         setLetters(reversingStringSteps[0]);
       }
-   }, [])
+      setIsLoader(false)
+   }
 
    const handleChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
       setInputText(e.target.value)
-   }, [])
+   }, []);
 
    const handleClick = useCallback(() => {
-      const arr = inputText.split('');
-      setLetters(arr);
-      if (arr.length !== 0) {
-         reverseLine(arr)
-      }
-   }, [inputText, reverseLine]);
+      reverseLine(inputText)
+   }, [inputText]);
 
    useEffect(() => {
       return () => {
