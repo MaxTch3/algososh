@@ -1,54 +1,34 @@
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';
 import { Button } from '../ui/button/button';
 import styles from './string.module.css'
 import { Circle } from '../ui/circle/circle';
-import { ElementStates } from '../../types/element-states';
-import { IItem } from './types';
-import { swap } from './utils';
+import { getLetterState, swap } from './utils';
 import { DELAY_IN_MS } from '../../constants/delays';
 
 export const StringComponent: React.FC = () => {
    const [inputText, setInputText] = useState('');
-   const [letters, setLetters] = useState<IItem[]>([]);
+   const [letters, setLetters] = useState<string[]>([]);
    const [isLoader, setIsLoader] = useState(false);
+   const [start, setStart] = useState<number | null>();
+   const [end, setEnd] = useState<number | null>();
 
-   const reverseLine = useCallback((arr: IItem[], start = 0, end = arr.length - 1) => {
-
+   const reverseLine = useCallback((arr: string[], start = 0, end = arr.length - 1) => {
       setIsLoader(true);
-
-      if (start === end) {
-         arr[start].state = ElementStates.Modified;
-         setTimeout(() => {
-            arr[start - 1].state = ElementStates.Modified;
-            arr[end + 1].state = ElementStates.Modified;
-            setIsLoader(false)
-         }, DELAY_IN_MS)
-      };
+      setStart(start);
+      setEnd(end)
 
       if (start < end) {
          setTimeout(() => {
-            if (start) {
-               swap(arr, start - 1, end + 1);
-               arr[start - 1].state = ElementStates.Modified;
-               arr[end + 1].state = ElementStates.Modified;
-            };
-            arr[start].state = ElementStates.Changing;
-            arr[end].state = ElementStates.Changing;
-            setLetters([...arr]);
             start++;
             end--;
+            swap(arr, start - 1, end + 1);
+            setLetters([...arr])
             reverseLine(arr, start, end)
          }, DELAY_IN_MS);
       } else {
-         setTimeout(() => {
-            swap(arr, start - 1, end + 1);
-            arr[end + 1].state = ElementStates.Modified;
-            arr[start - 1].state = ElementStates.Modified;
-            setLetters(arr);
-            setIsLoader(false);
-         }, DELAY_IN_MS)
+         setIsLoader(false);
       }
    }, [])
 
@@ -57,16 +37,18 @@ export const StringComponent: React.FC = () => {
    }, [])
 
    const handleClick = useCallback(() => {
-      const arrTemp = inputText.split('');
-      const arr = arrTemp.length > 1
-         ? arrTemp.map((item) => { return { item, state: ElementStates.Default } })
-         : [{ item: arrTemp[0], state: ElementStates.Modified }];
+      const arr = inputText.split('');
       setLetters(arr);
-
-      if (arr.length !== 1) {
+      if (arr.length !== 0) {
          reverseLine(arr)
       }
    }, [inputText, reverseLine]);
+
+   useEffect(() => {
+      return () => {
+         setIsLoader(false);
+      }
+   }, [])
 
    return (
       <SolutionLayout title='Строка'>
@@ -90,11 +72,12 @@ export const StringComponent: React.FC = () => {
                />
             </div>
             <div className={styles.letters_box}>
-               {
-                  letters.map(({item, state}, index) => (
+               {letters &&
+                  letters.map((item
+                     , index) => (
                      <Circle
                         key={index}
-                        state={state}
+                        state={getLetterState(letters.length, index, start!, end!)}
                         letter={item}
                      />
                   ))
