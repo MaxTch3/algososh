@@ -29,6 +29,8 @@ export const QueuePage: React.FC = () => {
 
    const enqueueItem = async () => {
       setIsLoadingEnqueue(true);
+      const currArr = queue.getQueue();
+      const currTail = queue.getTail();
       setInputText('');
       if (currTail < lengthQueue) { currArr[currTail] = { state: ElementStates.Changing } };
       setArray(currArr);
@@ -42,6 +44,9 @@ export const QueuePage: React.FC = () => {
 
    const dequeueItem = async () => {
       setIsLoadingDequeue(true);
+      const currArr = queue.getQueue();
+      const currHead = queue.getHead();
+      const currTail = queue.getTail();
       if (currHead === currTail - 1) {
          currArr[currHead] = { state: ElementStates.Changing, value: currArr[currHead]!.value };
          setArray(currArr);
@@ -60,10 +65,6 @@ export const QueuePage: React.FC = () => {
          setIsLoadingDequeue(false);
       }
    }
-
-   const currArr = useMemo(() => queue.getQueue(), [enqueueItem, dequeueItem]);
-   const currTail = useMemo(() => queue.getTail(), [enqueueItem, dequeueItem]);
-   const currHead = useMemo(() => queue.getHead(), [enqueueItem, dequeueItem]);
 
    const resetItems = () => {
       setInputText('');

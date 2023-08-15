@@ -17,9 +17,9 @@ export const ListPage: React.FC = () => {
    const [arrString, setArrString] = useState<string[]>(startingArray);
    const [inputText, setInputText] = useState('');
    const [inputIndex, setInputIndex] = useState('');
-   const [insertIndex, setInsertIndex] = useState<number>(NaN);
-   const [modifiedIndex, setModifiedIndex] = useState<number>(NaN);
-   const [changedIndex, setChangedIndex] = useState<number>(NaN);
+   const [insertIndex, setInsertIndex] = useState<number | null>();
+   const [modifiedIndex, setModifiedIndex] = useState<number | null>();
+   const [changedIndex, setChangedIndex] = useState<number | null>();
    const [isLoadingAddHead, setIsLoadingAddHead] = useState(false);
    const [isLoadingAddTail, setIsLoadingAddTail] = useState(false);
    const [isLoadingDeleteHead, setIsLoadingDeleteHead] = useState(false);
@@ -41,10 +41,10 @@ export const ListPage: React.FC = () => {
       listString.unshift(inputText);
       setInputText('');
       setArrString(listString.toArray());
-      setInsertIndex(NaN);
+      setInsertIndex(null);
       setModifiedIndex(0);
       await delay(DELAY_IN_MS);
-      setModifiedIndex(NaN);
+      setModifiedIndex(null);
       setIsFunction(ListFunction.None);
       setIsLoadingAddHead(false)
    };
@@ -62,11 +62,11 @@ export const ListPage: React.FC = () => {
       setInputIndex('');
       setInputText('');
       setArrString(listString.toArray());
-      setInsertIndex(NaN);
-      setChangedIndex(NaN);
+      setInsertIndex(null);
+      setChangedIndex(null);
       setModifiedIndex(index);
       await delay(DELAY_IN_MS);
-      setModifiedIndex(NaN);
+      setModifiedIndex(null);
       setIsFunction(ListFunction.None);
       setIsLoadingInsertAtIndex(false)
    }
@@ -79,10 +79,10 @@ export const ListPage: React.FC = () => {
       listString.push(inputText);
       setInputText('');
       setArrString(listString.toArray());
-      setInsertIndex(NaN);
+      setInsertIndex(null);
       setModifiedIndex(arrString.length);
       await delay(DELAY_IN_MS);
-      setModifiedIndex(NaN);
+      setModifiedIndex(null);
       setIsFunction(ListFunction.None);
       setIsLoadingAddTail(false)
    };
@@ -93,7 +93,7 @@ export const ListPage: React.FC = () => {
       setInsertIndex(0);
       await delay(DELAY_IN_MS);
       listString.deleteAt(0);
-      setInsertIndex(NaN);
+      setInsertIndex(null);
       setArrString(listString.toArray);
       setIsFunction(ListFunction.None);
       setIsLoadingDeleteHead(false);
@@ -110,10 +110,10 @@ export const ListPage: React.FC = () => {
       };
       setInsertIndex(index);
       await delay(DELAY_IN_MS);
-      setInsertIndex(NaN);
+      setInsertIndex(null);
       listString.deleteAt(index);
       setArrString(listString.toArray());
-      setChangedIndex(NaN);
+      setChangedIndex(null);
       setIsFunction(ListFunction.None);
       setIsLoadingDeleteAtIndex(false)
    }
@@ -124,7 +124,7 @@ export const ListPage: React.FC = () => {
       setInsertIndex(arrString.length - 1);
       await delay(DELAY_IN_MS);
       listString.deleteAt(arrString.length - 1);
-      setInsertIndex(NaN);
+      setInsertIndex(null);
       setArrString(listString.toArray());
       setIsFunction(ListFunction.None);
       setIsLoadingDeleteTail(false)
@@ -297,10 +297,10 @@ export const ListPage: React.FC = () => {
                                  ? '' : item
                            }
                            state={
-                              isFunction === ListFunction.DeleteAtIndex &&
+                              isFunction === ListFunction.DeleteAtIndex && changedIndex &&
                                  index <= changedIndex
                                  ? ElementStates.Changing
-                                 : isFunction === ListFunction.InsertAtIndex &&
+                                 : isFunction === ListFunction.InsertAtIndex && changedIndex &&
                                     index < changedIndex
                                     ? ElementStates.Changing
                                     : modifiedIndex === index
