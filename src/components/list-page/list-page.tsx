@@ -154,7 +154,7 @@ export const ListPage: React.FC = () => {
                   type='text'
                   maxLength={4}
                   isLimitText={true}
-                  style={{ maxWidth: '204px' }}
+                  extraClass={styles.input}
                   onChange={handleChangeText}
                   value={inputText}
                   disabled={isLoadingAddHead
@@ -166,7 +166,7 @@ export const ListPage: React.FC = () => {
                />
                <Button
                   text='Добавить&nbsp;в&nbsp;head'
-                  style={{ minWidth: '175px' }}
+                  extraClass={styles.button_text}
                   onClick={addHead}
                   isLoader={isLoadingAddHead}
                   disabled={!inputText
@@ -178,7 +178,7 @@ export const ListPage: React.FC = () => {
                />
                <Button
                   text='Добавить в tail'
-                  style={{ minWidth: '175px' }}
+                  extraClass={styles.button_text}
                   onClick={addTail}
                   isLoader={isLoadingAddTail}
                   disabled={!inputText
@@ -190,7 +190,7 @@ export const ListPage: React.FC = () => {
                />
                <Button
                   text='Удалить&nbsp;из&nbsp;head'
-                  style={{ minWidth: '175px' }}
+                  extraClass={styles.button_text}
                   disabled={arrString.length === 0
                      || isLoadingAddHead
                      || isLoadingAddTail
@@ -202,7 +202,7 @@ export const ListPage: React.FC = () => {
                />
                <Button
                   text='Удалить из tail'
-                  style={{ minWidth: '175px' }}
+                  extraClass={styles.button_text}
                   disabled={arrString.length === 0
                      || isLoadingAddHead
                      || isLoadingAddTail
@@ -218,7 +218,7 @@ export const ListPage: React.FC = () => {
                   placeholder='Введите индекс'
                   type='text'
                   maxLength={4}
-                  style={{ maxWidth: '204px' }}
+                  extraClass={styles.input}
                   value={inputIndex}
                   onChange={handleChangeIndex}
                   disabled={isLoadingAddHead
@@ -230,7 +230,7 @@ export const ListPage: React.FC = () => {
                />
                <Button
                   text='Добавить по индексу'
-                  style={{ minWidth: '362px' }}
+                  extraClass={styles.button_index}
                   disabled={!inputIndex
                      || !inputText
                      || isLoadingAddHead
@@ -243,7 +243,7 @@ export const ListPage: React.FC = () => {
                />
                <Button
                   text='Удалить по индексу'
-                  style={{ minWidth: '362px' }}
+                  extraClass={styles.button_index}
                   disabled={arrString.length === 0
                      || !inputIndex
                      || isLoadingAddHead

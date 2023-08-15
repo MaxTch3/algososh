@@ -139,7 +139,7 @@ export const SortingPage: React.FC = () => {
                         text='По возрастанию'
                         type='button'
                         sorting={Direction.Ascending}
-                        style={{ minWidth: '205px' }}
+                        extraClass={styles.button_ascending}
                         onClick={() => {
                            resetStatus();
                            if (method === AlgorithmMethod.SelectionSort) {
@@ -155,7 +155,7 @@ export const SortingPage: React.FC = () => {
                         text='По убыванию'
                         type='button'
                         sorting={Direction.Descending}
-                        style={{ minWidth: '186px' }}
+                        extraClass={styles.button_descending}
                         onClick={() => {
                            resetStatus();
                            if (method === AlgorithmMethod.SelectionSort) {
@@ -172,7 +172,6 @@ export const SortingPage: React.FC = () => {
                      extraClass={styles.button_reset}
                      text='Новый массив'
                      type='button'
-                     style={{ minWidth: '168px' }}
                      onClick={createArray}
                      disabled={isLoaderAsc || isLoaderDesc}
                   />

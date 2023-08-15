@@ -76,7 +76,7 @@ export const FibonacciPage: React.FC = () => {
                   onKeyDown={handleKeyDown}
                />
                <Button
-                  style={{ minWidth: '175px' }}
+                  extraClass={styles.button}
                   text={'Рассчитать'}
                   type='button'
                   isLoader={isLoader}

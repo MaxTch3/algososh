@@ -19,8 +19,17 @@
    gap: 12px;
 }
 
+.button_add {
+   min-width: 120px;
+}
+
+.button_del {
+   min-width: 110px;
+}
+
 .button_reset {
    margin-left: 80px;
+   min-width: 120px;
 }
 
 .array_box {
@@ -32,4 +41,8 @@
    flex-wrap: wrap;
    display: flex;
    justify-content: center;
+}
+
+.input {
+   min-width: 380px;
 }

@@ -27,3 +27,15 @@
    gap: 16px;
    align-items: center;
 }
+
+.input {
+   min-width: 204px;
+}
+
+.button_text {
+   min-width: 175px;
+}
+
+.button_index {
+   min-width: 362px;
+}

@@ -68,7 +68,7 @@ export const StackPage: React.FC = () => {
                   type='text'
                   maxLength={4}
                   isLimitText={true}
-                  style={{ minWidth: '380px' }}
+                  extraClass={styles.input}
                   onChange={handleChange}
                   value={inputText}
                />
@@ -77,7 +77,7 @@ export const StackPage: React.FC = () => {
                      <Button
                         text='Добавить'
                         type='button'
-                        style={{ minWidth: '120px' }}
+                        extraClass={styles.button_add}
                         disabled={!inputText || array.length >= 20 || isLoadingPop}
                         onClick={pushItem}
                         isLoader={isLoadingPush}
@@ -85,7 +85,7 @@ export const StackPage: React.FC = () => {
                      <Button
                         text='Удалить'
                         type='button'
-                        style={{ minWidth: '110px' }}
+                        extraClass={styles.button_del}
                         disabled={array.length === 0 || isLoadingPush}
                         onClick={popItem}
                         isLoader={isLoadingPop}
@@ -95,7 +95,6 @@ export const StackPage: React.FC = () => {
                      extraClass={styles.button_reset}
                      text='Очистить'
                      type='button'
-                     style={{ minWidth: '120px' }}
                      disabled={array.length === 0 || isLoadingPush || isLoadingPop}
                      onClick={resetItem}
                   />

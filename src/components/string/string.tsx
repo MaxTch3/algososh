@@ -64,7 +64,7 @@ export const StringComponent: React.FC = () => {
                   onChange={handleChange}
                />
                <Button
-                  style={{ minWidth: '175px' }}
+                  extraClass={styles.button}                 
                   text={'Развернуть'}
                   type='button'
                   isLoader={isLoader}

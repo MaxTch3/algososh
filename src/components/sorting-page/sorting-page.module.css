@@ -20,8 +20,17 @@
    gap: 12px;
 }
 
+.button_ascending {
+   min-width: 205px;
+}
+
+.button_descending {
+   min-width: 186px;
+}
+
 .button_reset {
    margin-left: 80px;
+   min-width: 168px;
 }
 
 .buttons {
