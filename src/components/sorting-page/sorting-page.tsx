@@ -4,23 +4,34 @@ import { RadioInput } from '../ui/radio-input/radio-input';
 import styles from './sorting-page.module.css'
 import { Button } from '../ui/button/button';
 import { Direction } from '../../types/direction';
-import { randomArr } from './utils';
-import { ElementStates } from '../../types/element-states';
+import {
+   getBubbleSortSteps,
+   getSelectionSortSteps,
+   getStateBubbleSorting,
+   getStateSelectionSorting,
+   randomArr
+} from './utils';
 import { Column } from '../ui/column/column';
 import { SHORT_DELAY_IN_MS } from '../../constants/delays';
 import { delay } from '../../utils/utils';
-import { AlgorithmMethod, IColumn } from './types';
+import { AlgorithmMethod } from './types';
 
 export const SortingPage: React.FC = () => {
    const minLength: number = 3;
-   const maxLength = 17;
-   const [array, setArray] = useState<IColumn[]>([]);
+   const maxLength: number = 17;
+   const [array, setArray] = useState<number[]>([]);
    const [method, setMethod] = useState(AlgorithmMethod.SelectionSort);
    const [isLoaderAsc, setIsLoaderAsc] = useState(false);
    const [isLoaderDesc, setIsLoaderDesc] = useState(false);
+   const [currentIndex, setCurrentIndex] = useState<number | null>();
+   const [comparedIndex, setComparedIndex] = useState<number | null>();
+   const [lastIndex, setLastIndex] = useState<number | null>()
 
    const createArray = useMemo(() => () => {
-      const newArray = randomArr(minLength, maxLength).map((number) => { return { number, state: ElementStates.Default } });
+      const newArray = randomArr(minLength, maxLength);
+      setCurrentIndex(null);
+      setComparedIndex(null);
+      setLastIndex(null);
       setArray(newArray)
    }, [setArray])
 
@@ -29,51 +40,25 @@ export const SortingPage: React.FC = () => {
    }, [createArray]);
 
    const resetStatus = () => {
-      array.forEach((item) => item.state = ElementStates.Default);
       setArray(array)
    }
 
-   const selectionSort = async (arr: IColumn[], order: 'asc' | 'desc') => {
+   const selectionSort = async (arr: number[], order: 'asc' | 'desc') => {
       if (order === 'asc') {
          setIsLoaderAsc(true);
       } else {
          setIsLoaderDesc(true);
-      }
-      for (let i = 0; i < arr.length; i++) {
-         if (i) {
-            arr[i - 1].state = ElementStates.Modified
-            arr[i].state = ElementStates.Changing
-            setArray([...arr])
-         } else {
-            arr[i].state = ElementStates.Changing
-            setArray([...arr])
-         }
-         if (i === arr.length - 1) {
-            arr[i].state = ElementStates.Modified
-            setArray([...arr])
-         }
-         let currIndex = i;
-         for (let j = i + 1; j < arr.length; j++) {
-            arr[j].state = ElementStates.Changing;
-            setArray([...arr]);
-            await delay(SHORT_DELAY_IN_MS)
-            if (order === 'asc'
-               ? arr[j].number < arr[currIndex].number
-               : arr[j].number > arr[currIndex].number) {
-               currIndex = j;
-            }
+      };
+      
+      const steps = getSelectionSortSteps(arr, order);
 
-            arr[j].state = ElementStates.Default;
-            setArray([...arr]);
-         };
+      for (let step of steps) {
+         setArray(step.array);
+         setCurrentIndex(step.currentIndex);
+         setComparedIndex(step.comparedIndex);
+         await delay(SHORT_DELAY_IN_MS)
+      };
 
-         if (currIndex !== i) {
-            const temp = arr[i].number;
-            arr[i].number = arr[currIndex].number;
-            arr[currIndex].number = temp;
-            setArray([...arr]);
-         }
-      }
       if (order === 'asc') {
          setIsLoaderAsc(false);
       } else {
@@ -81,35 +66,23 @@ export const SortingPage: React.FC = () => {
       }
    }
 
-   const bubbleSort = async (arr: IColumn[], order: 'asc' | 'desc') => {
+   const bubbleSort = async (arr: number[], order: 'asc' | 'desc') => {
       if (order === 'asc') {
          setIsLoaderAsc(true);
       } else {
          setIsLoaderDesc(true);
       }
-      for (let i = 0; i < arr.length; i++) {
-         for (let j = 0; j < arr.length - i - 1; j++) {
-            arr[j].state = ElementStates.Changing;
-            arr[j + 1].state = ElementStates.Changing;
-            setArray([...arr]);
 
-            if (order === 'asc' ? arr[j].number > arr[j + 1].number : arr[j].number < arr[j + 1].number) {
-               const temp = arr[j].number;
-               arr[j].number = arr[j + 1].number;
-               arr[j + 1].number = temp;
-               setArray([...arr])
-            }
-            await delay(SHORT_DELAY_IN_MS);
-            arr[j].state = ElementStates.Default;
-            arr[j + 1].state = ElementStates.Default;
-            setArray([...arr]);
-         }
+      const steps = getBubbleSortSteps(arr, order);
 
-         arr[arr.length - i - 1].state = ElementStates.Modified;
-      }
-      arr[0].state = ElementStates.Modified;
-      arr[1].state = ElementStates.Modified;
-      setArray([...arr]);
+      for (let step of steps) {
+         setArray(step.array);
+         setCurrentIndex(step.currentIndex);
+         setComparedIndex(step.comparedIndex);
+         setLastIndex(step.lastIndex);
+         await delay(SHORT_DELAY_IN_MS)
+      };
+
       if (order === 'asc') {
          setIsLoaderAsc(false);
       } else {
@@ -121,6 +94,7 @@ export const SortingPage: React.FC = () => {
       return () => {
          setIsLoaderAsc(false);
          setIsLoaderDesc(false);
+         setArray([])
       }
    }, [])
 
@@ -133,11 +107,13 @@ export const SortingPage: React.FC = () => {
                      checked={method === AlgorithmMethod.SelectionSort}
                      onChange={() => setMethod(AlgorithmMethod.SelectionSort)}
                      label='Выбор'
+                     disabled={isLoaderAsc || isLoaderDesc}
                   />
                   <RadioInput
                      checked={method === AlgorithmMethod.BubbleSort}
                      onChange={() => setMethod(AlgorithmMethod.BubbleSort)}
                      label='Пузырёк'
+                     disabled={isLoaderAsc || isLoaderDesc}
                   />
                </div>
                <div className={styles.buttons}>
@@ -186,8 +162,14 @@ export const SortingPage: React.FC = () => {
             </div>
             <div className={styles.array_box}>
                {
-                  array.map(({ number, state }, index) => (
-                     <Column key={index} index={number} state={state} />
+                  array.map((number, index) => (
+                     <Column key={index}
+                        index={number}
+                        state={method === AlgorithmMethod.SelectionSort
+                           ? getStateSelectionSorting(index, currentIndex!, comparedIndex!)
+                           : getStateBubbleSorting(index, currentIndex!, comparedIndex!, lastIndex!)
+                        }
+                     />
                   ))
                }
             </div>
