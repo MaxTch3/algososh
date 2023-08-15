@@ -117,6 +117,13 @@ export const SortingPage: React.FC = () => {
       }
    }
 
+   useEffect(() => {
+      return () => {
+         setIsLoaderAsc(false);
+         setIsLoaderDesc(false);
+      }
+   }, [])
+
    return (
       <SolutionLayout title='Сортировка массива'>
          <div className={styles.container}>

@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { SolutionLayout } from '../ui/solution-layout/solution-layout';
 import { Input } from '../ui/input/input';
 import { Button } from '../ui/button/button';
@@ -144,6 +144,17 @@ export const ListPage: React.FC = () => {
          setInputIndex(e.target.value)
       }
    };
+
+   useEffect(() => {
+      return () => {
+         setIsLoadingAddHead(false);
+         setIsLoadingAddTail(false);
+         setIsLoadingDeleteHead(false);
+         setIsLoadingDeleteTail(false);
+         setIsLoadingInsertAtIndex(false);
+         setIsLoadingDeleteAtIndex(false);
+      }
+   }, [])
 
    return (
       <SolutionLayout title='Связный список'>
