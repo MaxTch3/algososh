@@ -1,0 +1,1 @@
+export const startingArray: string[] = ['0', '34', '8', '1'];

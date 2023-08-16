@@ -1,0 +1,41 @@
+.container {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   gap: 12px;
+}
+
+.control_box {
+   display: flex;
+   gap: 12px;
+   max-width: 952px;
+   width: 100%;
+}
+
+.array_box {
+   padding-top: 90px;
+   display: flex;
+   column-gap: 16px;
+   row-gap: 80px;
+   flex-wrap: wrap;
+   display: flex;
+   justify-content: center;
+}
+
+.item_box {
+   display: flex;
+   gap: 16px;
+   align-items: center;
+}
+
+.input {
+   min-width: 204px;
+}
+
+.button_text {
+   min-width: 175px;
+}
+
+.button_index {
+   min-width: 362px;
+}
