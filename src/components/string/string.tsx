@@ -17,7 +17,7 @@ export const StringComponent: React.FC = () => {
 
    const reverseLine = async (inputText: string) => {
       setIsLoader(true);
-      const arr = inputText.split('');
+      const arr = inputText.trim().split('');
       const reversingStringSteps = getReversingStringSteps(arr)
       let start = 0;
       let end = arr.length - 1
@@ -64,7 +64,7 @@ export const StringComponent: React.FC = () => {
                   onChange={handleChange}
                />
                <Button
-                  extraClass={styles.button}                 
+                  extraClass={styles.button}
                   text={'Развернуть'}
                   type='button'
                   isLoader={isLoader}
