@@ -62,6 +62,7 @@ export const StringComponent: React.FC = () => {
                   maxLength={11}
                   isLimitText={true}
                   onChange={handleChange}
+                  test-id= 'textInput'
                />
                <Button
                   extraClass={styles.button}
@@ -71,6 +72,7 @@ export const StringComponent: React.FC = () => {
                   linkedList={'small'}
                   disabled={!inputText}
                   onClick={handleClick}
+                  test-id = 'reverseButton'
                />
             </div>
             <div className={styles.letters_box}>
