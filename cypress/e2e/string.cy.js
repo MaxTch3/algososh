@@ -1,8 +1,7 @@
 import {
    ElColor,
    baseUrl,
-   recursionUrl,
-
+   recursionUrl
 } from "./constants";
 import { DELAY_IN_MS } from '../../src/constants/delays';
 
