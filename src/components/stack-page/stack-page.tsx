@@ -91,6 +91,7 @@ export const StackPage: React.FC = () => {
                         disabled={array.length === 0 || isLoadingPush}
                         onClick={popItem}
                         isLoader={isLoadingPop}
+                        test-id='deleteButton'
                      />
                   </div>
                   <Button
@@ -99,6 +100,7 @@ export const StackPage: React.FC = () => {
                      type='button'
                      disabled={array.length === 0 || isLoadingPush || isLoadingPop}
                      onClick={resetItem}
+                     test-id='clearButton'
                   />
                </div>
             </div>
