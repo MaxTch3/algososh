@@ -90,6 +90,7 @@ export const QueuePage: React.FC = () => {
                   extraClass={styles.input}
                   onChange={handleChange}
                   value={inputText}
+                  test-id='textInput'
                />
                <div className={styles.buttons}>
                   <div className={styles.buttons_action}>
@@ -100,6 +101,7 @@ export const QueuePage: React.FC = () => {
                         disabled={!inputText || tail === lengthQueue || isLoadingDequeue}
                         onClick={enqueueItem}
                         isLoader={isLoadingEnqueue}
+                        test-id='addButton'
                      />
                      <Button
                         text='Удалить'

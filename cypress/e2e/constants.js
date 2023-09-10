@@ -3,6 +3,7 @@ export const baseUrl = 'http://localhost:3000/';
 export const recursionUrl = 'recursion';
 export const fibonacciUrl = 'fibonacci';
 export const stackUrl = 'stack';
+export const queueUrl = 'queue';
 
 export const extraPageInfo = [
    { name: 'Строка', url: recursionUrl },
