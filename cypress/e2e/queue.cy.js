@@ -10,6 +10,12 @@ describe('Тестирование страницы Очередь', () => {
       cy.clock()
    });
 
+   afterEach(() => {
+      cy.clock().then((clock) => {
+         clock.restore()
+      })
+   })
+
    it('Кнопка Добавить заблокированна при пустом поле input', () => {
       cy.get('[test-id="textInput"]').invoke('val').then((val) => {
          if (!val) {
@@ -47,7 +53,6 @@ describe('Тестирование страницы Очередь', () => {
          });
 
          cy.tick(SHORT_DELAY_IN_MS);
-
          cy.get('[test-id="circle"]').eq(i).should('have.css', 'border-color', ElColor.default);
          cy.get('[test-id="circle"]').eq(i).should('have.text', textArray[i])
       }
@@ -82,8 +87,21 @@ describe('Тестирование страницы Очередь', () => {
       }
    });
 
+   it('Корректность очистки очереди', () => {
 
-
+      for (let i = 0; i < textArray.length; i++) {
+         cy.get('[test-id="textInput"]').type(textArray[i]);
+         cy.get('[test-id="addButton"]').click();
+         cy.tick(SHORT_DELAY_IN_MS)
+      }
+      cy.get('[test-id="clearButton"]').click();
+      cy.get('[test-id="circle"]').each((element) => {
+         cy.get(element).should('have.css', 'border-color', ElColor.default);
+         cy.get(element).should('not.have.text');
+         cy.get(element).parent().get('[test-id="head"]').should('not.have.text');
+         cy.get(element).parent().get('[test-id="tail"]').should('not.have.text');
+      })
+   })
 
 });
 

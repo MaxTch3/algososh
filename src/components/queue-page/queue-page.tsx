@@ -119,6 +119,7 @@ export const QueuePage: React.FC = () => {
                      type='button'
                      disabled={tail === undefined || isLoadingEnqueue || isLoadingDequeue}
                      onClick={resetItems}
+                     test-id='clearButton'
                   />
                </div>
             </div>
