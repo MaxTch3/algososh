@@ -110,6 +110,7 @@ export const QueuePage: React.FC = () => {
                         onClick={dequeueItem}
                         disabled={tail === 0 || head === lengthQueue || tail === head || isLoadingEnqueue}
                         isLoader={isLoadingDequeue}
+                        test-id='deleteButton'
                      />
                   </div>
                   <Button
