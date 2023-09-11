@@ -10,6 +10,13 @@ describe('Тестирование страницы Строка', () => {
       cy.visit(baseUrl + recursionUrl);
       cy.clock();
    });
+
+   afterEach(() => {
+      cy.clock().then((clock) => {
+         clock.restore()
+      })
+   });
+
    it('Кнопка заблокированна при пустом поле input', () => {
       cy.get('[test-id="textInput"]').invoke('val').then((val) => {
          if (!val) {
@@ -42,8 +49,8 @@ describe('Тестирование страницы Строка', () => {
          cy.get('[test-id="circle"]').each((element, index) => {
             cy.get(element).contains(steps[i].textArray[index]);
             cy.get(element).should('have.css', 'border-color', steps[i].colors[index]);
-            cy.tick(DELAY_IN_MS);
          })
+         cy.tick(DELAY_IN_MS);
       }
    });
 });
