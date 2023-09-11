@@ -10,6 +10,12 @@ describe('Тестирование страницы Стек', () => {
       cy.clock();
    });
 
+   afterEach(() => {
+      cy.clock().then((clock) => {
+         clock.restore()
+      })
+   });
+
    it('Кнопка Добавить заблокированна при пустом поле input', () => {
       cy.get('[test-id="textInput"]').invoke('val').then((val) => {
          if (!val) {

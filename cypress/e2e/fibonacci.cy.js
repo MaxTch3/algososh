@@ -6,7 +6,13 @@ describe('Тестирование страницы Числа Фибоначч�
       cy.visit(baseUrl + fibonacciUrl);
       cy.clock();
    });
-   
+
+   afterEach(() => {
+      cy.clock().then((clock) => {
+         clock.restore()
+      })
+   })
+
    it('Кнопка заблокированна при пустом поле input', () => {
       cy.get('[test-id="numberInput"]').invoke('val').then((val) => {
          if (!val) {

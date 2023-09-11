@@ -1,8 +1,4 @@
-import {
-   ElColor,
-   baseUrl,
-   recursionUrl
-} from "./constants";
+import { ElColor, baseUrl, recursionUrl } from "./constants";
 import { DELAY_IN_MS } from '../../src/constants/delays';
 
 describe('Тестирование страницы Строка', () => {

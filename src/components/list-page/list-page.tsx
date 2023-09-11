@@ -174,6 +174,7 @@ export const ListPage: React.FC = () => {
                      || isLoadingDeleteTail
                      || isLoadingInsertAtIndex
                      || isLoadingDeleteAtIndex}
+                  test-id='textInput'
                />
                <Button
                   text='Добавить&nbsp;в&nbsp;head'
@@ -186,6 +187,7 @@ export const ListPage: React.FC = () => {
                      || isLoadingDeleteTail
                      || isLoadingInsertAtIndex
                      || isLoadingDeleteAtIndex}
+                  test-id='addHeadButton'
                />
                <Button
                   text='Добавить в tail'
@@ -198,6 +200,7 @@ export const ListPage: React.FC = () => {
                      || isLoadingDeleteTail
                      || isLoadingInsertAtIndex
                      || isLoadingDeleteAtIndex}
+                  test-id='addTailButton'
                />
                <Button
                   text='Удалить&nbsp;из&nbsp;head'
@@ -238,6 +241,7 @@ export const ListPage: React.FC = () => {
                      || isLoadingDeleteTail
                      || isLoadingInsertAtIndex
                      || isLoadingDeleteAtIndex}
+                  test-id='indexInput'
                />
                <Button
                   text='Добавить по индексу'
@@ -251,6 +255,7 @@ export const ListPage: React.FC = () => {
                      || isLoadingDeleteAtIndex}
                   onClick={insertAtIndex}
                   isLoader={isLoadingInsertAtIndex}
+                  test-id='addIndexButton'
                />
                <Button
                   text='Удалить по индексу'
@@ -264,6 +269,7 @@ export const ListPage: React.FC = () => {
                      || isLoadingInsertAtIndex}
                   onClick={deleteAtIndex}
                   isLoader={isLoadingDeleteAtIndex}
+                  test-id='deleteIndexButton'
                />
             </div>
             <div className={styles.array_box}>
