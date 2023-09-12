@@ -33,7 +33,7 @@ export const Circle: React.FC<CircleProps> = ({
       >
         {head}
       </div>
-      <div test-id='circle'
+        <div test-id={!isSmall ? 'circle' : 'smallCircle'}
         className={`${styles.circle}  ${isSmall ? styles.small : ""} ${
           styles[state]
         }`}

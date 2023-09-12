@@ -1,3 +1,4 @@
+import { DELAY_IN_MS } from "../../src/constants/delays";
 import { ElColor, baseUrl, listUrl } from "./constants";
 
 describe('Тестирование страницы Связный список', () => {
@@ -45,7 +46,6 @@ describe('Тестирование страницы Связный список'
       cy.get('[test-id="addTailButton"]').should('not.be.disabled');
       cy.get('[test-id="addIndexButton"]').should('not.be.disabled');
       cy.get('[test-id="deleteIndexButton"]').should('not.be.disabled');
-
    });
 
    it('Корректность отрисовки дефолтного списка', () => {
@@ -64,6 +64,74 @@ describe('Тестирование страницы Связный список'
             cy.get(element).parent().find('[test-id="tail"]').should('have.text', 'tail')
          } else {
             cy.get(element).parent().find('[test-id="tail"]').should('have.text', '')
+         }
+      })
+   });
+
+   it('Корректность добавления элемента в head', () => {
+      cy.get('[test-id="textInput"]').type('А');
+      cy.get('[test-id="addHeadButton"]').click();
+
+      cy.get('[test-id="circle"]').eq(0)
+         .parent()
+         .find('[test-id="head"]')
+         .find('[test-id="smallCircle"]')
+         .should('have.css', 'border-color', ElColor.changing)
+         .should('have.text', 'А');
+
+      cy.tick(DELAY_IN_MS);
+
+      cy.get('[test-id="circle"]').eq(0)
+         .should('have.css', 'border-color', ElColor.modified)
+         .should('have.text', 'А')
+         .parent()
+         .find('[test-id="head"]')
+         .should('have.text', 'head')
+         .should('not.contain', '[test-id="smallCircle"]');
+
+      cy.tick(DELAY_IN_MS);
+
+      cy.get('[test-id="circle"]').eq(0)
+         .should('have.css', 'border-color', ElColor.default)
+   });
+
+   it('Корректность добавления элемента в tail', () => {
+      cy.get('[test-id="textInput"]').type('Б');
+      cy.get('[test-id="addTailButton"]').click();
+
+      cy.get('[test-id="circle"]').each((element, index, list) => {
+         if (index === list.length - 1) {
+            cy.get(element)
+               .parent()
+               .find('[test-id="head"]')
+               .find('[test-id="smallCircle"]')
+               .should('have.css', 'border-color', ElColor.changing)
+               .should('have.text', 'Б');
+         }
+      })
+
+      cy.tick(DELAY_IN_MS);
+
+      cy.get('[test-id="circle"]').each((element, index, list) => {
+         if (index === list.length - 1) {
+            cy.get(element)
+               .should('have.css', 'border-color', ElColor.modified)
+               .should('have.text', 'Б')
+               .parent()
+               .find('[test-id="head"]')
+               .should('not.contain', '[test-id="smallCircle"]');
+         }
+      });
+
+      cy.tick(DELAY_IN_MS);
+
+      cy.get('[test-id="circle"]').eq(0)
+         .should('have.css', 'border-color', ElColor.default)
+
+      cy.get('[test-id="circle"]').each((element, index, list) => {
+         if (index === list.length - 1) {
+            cy.get(element)
+               .should('have.css', 'border-color', ElColor.default)
          }
       })
    });
