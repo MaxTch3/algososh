@@ -41,14 +41,14 @@ describe('Тестирование страницы Очередь', () => {
                cy.get(element).should('have.text', textArray[index])
             }
             if (index === i - 1 && i > 0) {
-               cy.get(element).parent().get('[test-id="tail"]').should('have.text', 'tail')
+               cy.get(element).parent().find('[test-id="tail"]').should('have.text', 'tail')
             } else {
-               cy.get(element).parent().get('[test-id="tail"]').should('not.have.text')
+               cy.get(element).parent().find('[test-id="tail"]').should('have.text', '')
             }
             if (index === 0 && i > 0) {
-               cy.get(element).parent().get('[test-id="head"]').should('have.text', 'head')
+               cy.get(element).parent().find('[test-id="head"]').should('have.text', 'head')
             } else {
-               cy.get(element).parent().get('[test-id="head"]').should('not.have.text');
+               cy.get(element).parent().find('[test-id="head"]').should('have.text', '');
             }
          });
 
@@ -72,16 +72,16 @@ describe('Тестирование страницы Очередь', () => {
             if (index === i) {
                cy.get(element).should('have.css', 'border-color', ElColor.changing);
                cy.get(element).should('have.text', textArray[i]);
-               cy.get(element).parent().get('[test-id="head"]').should('have.text', 'head')
+               cy.get(element).parent().find('[test-id="head"]').should('have.text', 'head')
             }
          });
 
          cy.tick(SHORT_DELAY_IN_MS);
          cy.get('[test-id="circle"]').eq(i).should('have.css', 'border-color', ElColor.default);
          cy.get('[test-id="circle"]').eq(i).should('not.have.text');
-         cy.get('[test-id="circle"]').eq(i).parent().get('[test-id="head"]').should('not.have.text');
+         cy.get('[test-id="circle"]').eq(i).parent().find('[test-id="head"]').should('have.text', '');
          if (i === textArray.length - 1) {
-            cy.get('[test-id="circle"]').eq(i).parent().get('[test-id="tail"]').should('not.have.text')
+            cy.get('[test-id="circle"]').eq(i).parent().find('[test-id="tail"]').should('have.text', '')
          }
       }
    });
@@ -97,8 +97,8 @@ describe('Тестирование страницы Очередь', () => {
       cy.get('[test-id="circle"]').each((element) => {
          cy.get(element).should('have.css', 'border-color', ElColor.default);
          cy.get(element).should('not.have.text');
-         cy.get(element).parent().get('[test-id="head"]').should('not.have.text');
-         cy.get(element).parent().get('[test-id="tail"]').should('not.have.text');
+         cy.get(element).parent().find('[test-id="head"]').should('have.text', '');
+         cy.get(element).parent().find('[test-id="tail"]').should('have.text', '');
       })
    })
 
