@@ -305,10 +305,10 @@ export const ListPage: React.FC = () => {
                                  ? '' : item
                            }
                            state={
-                              isFunction === ListFunction.DeleteAtIndex && changedIndex &&
+                              isFunction === ListFunction.DeleteAtIndex && (changedIndex || changedIndex === 0) &&
                                  index <= changedIndex
                                  ? ElementStates.Changing
-                                 : isFunction === ListFunction.InsertAtIndex && changedIndex &&
+                                 : isFunction === ListFunction.InsertAtIndex && (changedIndex || changedIndex === 0) &&
                                     index < changedIndex
                                     ? ElementStates.Changing
                                     : modifiedIndex === index

@@ -251,8 +251,51 @@ describe('Тестирование страницы Связный список'
                   .should('not.contain', '[test-id="smallCircle"]')
                   .should("have.text", 'tail')
             }
-         });
-      
+         });      
    });
+
+   it('Корректность удаления элемента по индексу', () => { 
+      const delIndex = 1;
+      
+      cy.get('[test-id="indexInput"]').type(delIndex);
+      cy.get('[test-id="deleteIndexButton"]').click();
+
+      cy.get('[test-id="circle"]')
+         .eq(0)
+         .should('have.css', 'border-color', ElColor.changing)
+
+      cy.tick(DELAY_IN_MS);
+
+      cy.get('[test-id="circle"]')
+         .eq(0)
+         .should('have.css', 'border-color', ElColor.changing)
+
+      cy.get('[test-id="circle"]')
+         .eq(1)
+         .should('have.css', 'border-color', ElColor.changing)
+
+      cy.tick(DELAY_IN_MS);
+
+      cy.get('[test-id="circle"]')
+         .eq(1)
+         .should('have.text', '')
+         .should('have.css', 'border-color', ElColor.changing)
+         .parent()
+         .find('[test-id="tail"]')
+         .find('[test-id="smallCircle"]')
+         .should('have.css', 'border-color', ElColor.changing)
+         .should('have.text', startingArray[delIndex]);    
+      
+      cy.tick(DELAY_IN_MS);
+
+      const delAtIndexArray = [...startingArray.slice(0, delIndex), ...startingArray.slice(delIndex + 1)]
+      cy.get('[test-id="circle"]')
+         .should("have.length", startingArray.length - 1)
+         .each((element, index) => {
+            cy.get(element)
+               .should('have.text', delAtIndexArray[index])
+               .should('have.css', 'border-color', ElColor.default)
+      })
+   })
 
 })
