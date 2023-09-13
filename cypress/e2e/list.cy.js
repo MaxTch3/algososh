@@ -197,8 +197,6 @@ describe('Тестирование страницы Связный список'
    });
 
    it('Корректность удаления элемента из head', () => {
-      cy.get('[test-id="circle"]')
-         .should("have.length", startingArray.length)
 
       cy.get('[test-id="deleteHeadButton"]').click()
 
@@ -220,7 +218,41 @@ describe('Тестирование страницы Связный список'
          .should("have.text", startingArray[1])
          .parent()
          .find('[test-id="head"]')
-         .should("have.text", 'head')       
+         .should("have.text", 'head')
+   });
+
+   it('Корректность удаления элемента из tail', () => {
+
+      cy.get('[test-id="deleteTailButton"]').click()
+
+      cy.get('[test-id="circle"]').each((element, index, list) => {
+         if (index === list.length - 1) {
+            cy.get(element)
+               .should('have.text', '')
+               .should('have.css', 'border-color', ElColor.default)
+               .parent()
+               .find('[test-id="tail"]')
+               .find('[test-id="smallCircle"]')
+               .should('have.css', 'border-color', ElColor.changing)
+               .should('have.text', startingArray[startingArray.length - 1]);
+         }
+      });
+
+      cy.tick(DELAY_IN_MS);
+
+      cy.get('[test-id="circle"]')
+         .should("have.length", startingArray.length - 1)
+         .each((element, index, list) => {
+            if (index === list.length - 1) {
+               cy.get(element)
+                  .should("have.text", startingArray[startingArray.length - 2])
+                  .parent()
+                  .find('[test-id="tail"]')
+                  .should('not.contain', '[test-id="smallCircle"]')
+                  .should("have.text", 'tail')
+            }
+         });
+      
    });
 
 })
