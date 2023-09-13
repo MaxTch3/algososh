@@ -213,6 +213,7 @@ export const ListPage: React.FC = () => {
                      || isLoadingDeleteAtIndex}
                   onClick={deleteHead}
                   isLoader={isLoadingDeleteHead}
+                  test-id='deleteHeadButton'
                />
                <Button
                   text='Удалить из tail'
@@ -225,6 +226,7 @@ export const ListPage: React.FC = () => {
                      || isLoadingDeleteAtIndex}
                   onClick={deleteTail}
                   isLoader={isLoadingDeleteTail}
+                  test-id='deleteTailButton'
                />
             </div>
             <div className={styles.control_box}>

@@ -196,4 +196,31 @@ describe('Тестирование страницы Связный список'
          .should('have.text', 'В')
    });
 
+   it('Корректность удаления элемента из head', () => {
+      cy.get('[test-id="circle"]')
+         .should("have.length", startingArray.length)
+
+      cy.get('[test-id="deleteHeadButton"]').click()
+
+      cy.get('[test-id="circle"]')
+         .eq(0)
+         .should('have.text', '')
+         .should('have.css', 'border-color', ElColor.default)
+         .parent()
+         .find('[test-id="tail"]')
+         .find('[test-id="smallCircle"]')
+         .should('have.css', 'border-color', ElColor.changing)
+         .should('have.text', startingArray[0]);
+
+      cy.tick(DELAY_IN_MS);
+
+      cy.get('[test-id="circle"]')
+         .should("have.length", startingArray.length - 1)
+         .eq(0)
+         .should("have.text", startingArray[1])
+         .parent()
+         .find('[test-id="head"]')
+         .should("have.text", 'head')       
+   });
+
 })
