@@ -1,5 +1,5 @@
 import { SHORT_DELAY_IN_MS } from "../../src/constants/delays";
-import { baseUrl, fibonacciUrl } from "./constants";
+import { baseUrl, circleSelector, fibonacciUrl } from "./constants";
 
 describe('Тестирование страницы Числа Фибоначчи', () => {
    beforeEach(() => {
@@ -29,7 +29,7 @@ describe('Тестирование страницы Числа Фибоначч�
       cy.get('[test-id="calculateButton"]').click();
 
       for (let i = 0; i <= inputNumber; i++) {
-         cy.get('[test-id="circle"]').eq(i).contains(resultArray[i]);
+         cy.get(circleSelector).eq(i).contains(resultArray[i]);
          cy.tick(SHORT_DELAY_IN_MS)
       }
    });

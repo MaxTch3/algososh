@@ -1,4 +1,4 @@
-import { ElColor, baseUrl, recursionUrl } from "./constants";
+import { ElColor, baseUrl, circleSelector, recursionUrl, textInputSelector } from "./constants";
 import { DELAY_IN_MS } from '../../src/constants/delays';
 
 describe('Тестирование страницы Строка', () => {
@@ -14,7 +14,7 @@ describe('Тестирование страницы Строка', () => {
    });
 
    it('Кнопка заблокированна при пустом поле input', () => {
-      cy.get('[test-id="textInput"]').invoke('val').then((val) => {
+      cy.get(textInputSelector).invoke('val').then((val) => {
          if (!val) {
             cy.get('[test-id="reverseButton"]').should('be.disabled')
          }
@@ -38,11 +38,11 @@ describe('Тестирование страницы Строка', () => {
          }
       ];
 
-      cy.get('[test-id="textInput"]').type(inputText);
+      cy.get(textInputSelector).type(inputText);
       cy.get('[test-id="reverseButton"]').click();
 
       for (let i = 0; i < steps.length; i++) {
-         cy.get('[test-id="circle"]').each((element, index) => {
+         cy.get(circleSelector).each((element, index) => {
             cy.get(element).contains(steps[i].textArray[index]);
             cy.get(element).should('have.css', 'border-color', steps[i].colors[index]);
          })

@@ -1,5 +1,21 @@
 import { DELAY_IN_MS } from "../../src/constants/delays";
-import { ElColor, baseUrl, listUrl } from "./constants";
+import {
+   ElColor,
+   baseUrl,
+   circleSelector,
+   smallCircleSelector,
+   headSelector,
+   tailSelector,
+   listUrl,
+   addHeadSelector,
+   addTailSelector,
+   addIndexSelector,
+   deleteIndexSelector,
+   textInputSelector,
+   indexInputSelector,
+   deleteHeadSelector,
+   deleteTailSelector
+} from "./constants";
 
 const startingArray = ['0', '34', '8', '1'];
 
@@ -18,100 +34,100 @@ describe('Тестирование страницы Связный список'
 
    it('Корректность блокировок кнопок при пустых/заполненных полях ввода значения и индекса', () => {
 
-      cy.get('[test-id="textInput"]').invoke('val').then((val) => {
+      cy.get(textInputSelector).invoke('val').then((val) => {
          if (!val) {
-            cy.get('[test-id="addHeadButton"]').should('be.disabled');
-            cy.get('[test-id="addTailButton"]').should('be.disabled');
-            cy.get('[test-id="addIndexButton"]').should('be.disabled');
-            cy.get('[test-id="deleteIndexButton"]').should('be.disabled');
+            cy.get(addHeadSelector).should('be.disabled');
+            cy.get(addTailSelector).should('be.disabled');
+            cy.get(addIndexSelector).should('be.disabled');
+            cy.get(deleteIndexSelector).should('be.disabled');
          }
       });
 
-      cy.get('[test-id="textInput"]').type('А');
+      cy.get(textInputSelector).type('А');
 
-      cy.get('[test-id="addHeadButton"]').should('not.be.disabled');
-      cy.get('[test-id="addTailButton"]').should('not.be.disabled');
-      cy.get('[test-id="addIndexButton"]').should('be.disabled');
-      cy.get('[test-id="deleteIndexButton"]').should('be.disabled');
+      cy.get(addHeadSelector).should('not.be.disabled');
+      cy.get(addTailSelector).should('not.be.disabled');
+      cy.get(addIndexSelector).should('be.disabled');
+      cy.get(deleteIndexSelector).should('be.disabled');
 
-      cy.get('[test-id="textInput"]').type('{backspace}');
-      cy.get('[test-id="indexInput"]').type('1');
+      cy.get(textInputSelector).type('{backspace}');
+      cy.get(indexInputSelector).type('1');
 
-      cy.get('[test-id="addHeadButton"]').should('be.disabled');
-      cy.get('[test-id="addTailButton"]').should('be.disabled');
-      cy.get('[test-id="addIndexButton"]').should('be.disabled');
-      cy.get('[test-id="deleteIndexButton"]').should('not.be.disabled');
+      cy.get(addHeadSelector).should('be.disabled');
+      cy.get(addTailSelector).should('be.disabled');
+      cy.get(addIndexSelector).should('be.disabled');
+      cy.get(deleteIndexSelector).should('not.be.disabled');
 
-      cy.get('[test-id="textInput"]').type('А');
+      cy.get(textInputSelector).type('А');
 
-      cy.get('[test-id="addHeadButton"]').should('not.be.disabled');
-      cy.get('[test-id="addTailButton"]').should('not.be.disabled');
-      cy.get('[test-id="addIndexButton"]').should('not.be.disabled');
-      cy.get('[test-id="deleteIndexButton"]').should('not.be.disabled');
+      cy.get(addHeadSelector).should('not.be.disabled');
+      cy.get(addTailSelector).should('not.be.disabled');
+      cy.get(addIndexSelector).should('not.be.disabled');
+      cy.get(deleteIndexSelector).should('not.be.disabled');
    });
 
    it('Корректность отрисовки дефолтного списка', () => {
-      cy.get('[test-id="circle"]').each((element, index, list) => {
+      cy.get(circleSelector).each((element, index, list) => {
          cy.get(element).should('have.text', startingArray[index]);
          cy.get(element).should('have.css', 'border-color', ElColor.default);
 
          if (index === 0) {
-            cy.get(element).parent().find('[test-id="head"]').should('have.text', 'head')
+            cy.get(element).parent().find(headSelector).should('have.text', 'head')
          } else {
-            cy.get(element).parent().find('[test-id="head"]').should('have.text', '')
+            cy.get(element).parent().find(headSelector).should('have.text', '')
          };
 
          if (index === list.length - 1) {
-            cy.get(element).parent().find('[test-id="tail"]').should('have.text', 'tail')
+            cy.get(element).parent().find(tailSelector).should('have.text', 'tail')
          } else {
-            cy.get(element).parent().find('[test-id="tail"]').should('have.text', '')
+            cy.get(element).parent().find(tailSelector).should('have.text', '')
          }
       })
    });
 
    it('Корректность добавления элемента в head', () => {
-      cy.get('[test-id="textInput"]').type('А');
-      cy.get('[test-id="addHeadButton"]').click();
+      cy.get(textInputSelector).type('А');
+      cy.get(addHeadSelector).click();
 
-      cy.get('[test-id="circle"]')
+      cy.get(circleSelector)
          .should("have.length", startingArray.length)
          .eq(0)
          .parent()
-         .find('[test-id="head"]')
-         .find('[test-id="smallCircle"]')
+         .find(headSelector)
+         .find(smallCircleSelector)
          .should('have.css', 'border-color', ElColor.changing)
          .should('have.text', 'А');
 
       cy.tick(DELAY_IN_MS);
 
-      cy.get('[test-id="circle"]')
+      cy.get(circleSelector)
          .should("have.length", startingArray.length + 1)
          .eq(0)
          .should('have.css', 'border-color', ElColor.modified)
          .should('have.text', 'А')
          .parent()
-         .find('[test-id="head"]')
+         .find(headSelector)
          .should('have.text', 'head')
-         .should('not.contain', '[test-id="smallCircle"]');
+         .should('not.contain', smallCircleSelector);
 
       cy.tick(DELAY_IN_MS);
 
-      cy.get('[test-id="circle"]').eq(0)
+      cy.get(circleSelector).eq(0)
          .should('have.css', 'border-color', ElColor.default)
    });
 
    it('Корректность добавления элемента в tail', () => {
-      cy.get('[test-id="textInput"]').type('Б');
-      cy.get('[test-id="addTailButton"]').click();
+      cy.get(textInputSelector).type('Б');
+      cy.get(addTailSelector).click();
 
-      cy.get('[test-id="circle"]')
+      cy.get(circleSelector)
          .should("have.length", startingArray.length)
          .each((element, index, list) => {
             if (index === list.length - 1) {
                cy.get(element)
                   .parent()
-                  .find('[test-id="head"]')
-                  .find('[test-id="smallCircle"]')
+                  .find(headSelector)
+                  .find(smallCircleSelector)
                   .should('have.css', 'border-color', ElColor.changing)
                   .should('have.text', 'Б');
             }
@@ -119,7 +135,7 @@ describe('Тестирование страницы Связный список'
 
       cy.tick(DELAY_IN_MS);
 
-      cy.get('[test-id="circle"]')
+      cy.get(circleSelector)
          .should("have.length", startingArray.length + 1)
          .each((element, index, list) => {
             if (index === list.length - 1) {
@@ -127,17 +143,17 @@ describe('Тестирование страницы Связный список'
                   .should('have.css', 'border-color', ElColor.modified)
                   .should('have.text', 'Б')
                   .parent()
-                  .find('[test-id="head"]')
-                  .should('not.contain', '[test-id="smallCircle"]');
+                  .find(headSelector)
+                  .should('not.contain', smallCircleSelector);
             }
          });
 
       cy.tick(DELAY_IN_MS);
 
-      cy.get('[test-id="circle"]').eq(0)
+      cy.get(circleSelector).eq(0)
          .should('have.css', 'border-color', ElColor.default)
 
-      cy.get('[test-id="circle"]').each((element, index, list) => {
+      cy.get(circleSelector).each((element, index, list) => {
          if (index === list.length - 1) {
             cy.get(element)
                .should('have.css', 'border-color', ElColor.default)
@@ -147,92 +163,92 @@ describe('Тестирование страницы Связный список'
 
 
    it('Корректность добавления элемента по индексу', () => {
-      cy.get('[test-id="textInput"]').type('В');
-      cy.get('[test-id="indexInput"]').type('1');
-      cy.get('[test-id="addIndexButton"]').click();
+      cy.get(textInputSelector).type('В');
+      cy.get(indexInputSelector).type('1');
+      cy.get(addIndexSelector).click();
 
-      cy.get('[test-id="circle"]')
+      cy.get(circleSelector)
          .should("have.length", startingArray.length)
          .eq(0)
          .should('have.css', 'border-color', ElColor.default)
          .parent()
-         .find('[test-id="head"]')
-         .find('[test-id="smallCircle"]')
+         .find(headSelector)
+         .find(smallCircleSelector)
          .should('have.css', 'border-color', ElColor.changing)
          .should('have.text', 'В');
 
       cy.tick(DELAY_IN_MS);
 
-      cy.get('[test-id="circle"]').eq(0)
+      cy.get(circleSelector).eq(0)
          .should('have.css', 'border-color', ElColor.changing)
          .parent()
-         .find('[test-id="head"]')
+         .find(headSelector)
          .should('have.text', 'head')
-         .should('not.contain', '[test-id="smallCircle"]');
+         .should('not.contain', smallCircleSelector);
 
-      cy.get('[test-id="circle"]').eq(1)
+      cy.get(circleSelector).eq(1)
          .should('have.css', 'border-color', ElColor.default)
          .parent()
-         .find('[test-id="head"]')
-         .find('[test-id="smallCircle"]')
+         .find(headSelector)
+         .find(smallCircleSelector)
          .should('have.css', 'border-color', ElColor.changing)
          .should('have.text', 'В');
 
       cy.tick(DELAY_IN_MS);
 
-      cy.get('[test-id="circle"]')
+      cy.get(circleSelector)
          .should("have.length", startingArray.length + 1)
          .eq(1)
          .should('have.css', 'border-color', ElColor.modified)
          .parent()
-         .find('[test-id="head"]')
+         .find(headSelector)
          .should('have.text', '')
-         .should('not.contain', '[test-id="smallCircle"]');
+         .should('not.contain', smallCircleSelector);
 
       cy.tick(DELAY_IN_MS);
 
-      cy.get('[test-id="circle"]').eq(1)
+      cy.get(circleSelector).eq(1)
          .should('have.css', 'border-color', ElColor.default)
          .should('have.text', 'В')
    });
 
    it('Корректность удаления элемента из head', () => {
 
-      cy.get('[test-id="deleteHeadButton"]').click()
+      cy.get(deleteHeadSelector).click()
 
-      cy.get('[test-id="circle"]')
+      cy.get(circleSelector)
          .eq(0)
          .should('have.text', '')
          .should('have.css', 'border-color', ElColor.default)
          .parent()
-         .find('[test-id="tail"]')
-         .find('[test-id="smallCircle"]')
+         .find(tailSelector)
+         .find(smallCircleSelector)
          .should('have.css', 'border-color', ElColor.changing)
          .should('have.text', startingArray[0]);
 
       cy.tick(DELAY_IN_MS);
 
-      cy.get('[test-id="circle"]')
+      cy.get(circleSelector)
          .should("have.length", startingArray.length - 1)
          .eq(0)
          .should("have.text", startingArray[1])
          .parent()
-         .find('[test-id="head"]')
+         .find(headSelector)
          .should("have.text", 'head')
    });
 
    it('Корректность удаления элемента из tail', () => {
 
-      cy.get('[test-id="deleteTailButton"]').click()
+      cy.get(deleteTailSelector).click()
 
-      cy.get('[test-id="circle"]').each((element, index, list) => {
+      cy.get(circleSelector).each((element, index, list) => {
          if (index === list.length - 1) {
             cy.get(element)
                .should('have.text', '')
                .should('have.css', 'border-color', ElColor.default)
                .parent()
-               .find('[test-id="tail"]')
-               .find('[test-id="smallCircle"]')
+               .find(tailSelector)
+               .find(smallCircleSelector)
                .should('have.css', 'border-color', ElColor.changing)
                .should('have.text', startingArray[startingArray.length - 1]);
          }
@@ -240,15 +256,15 @@ describe('Тестирование страницы Связный список'
 
       cy.tick(DELAY_IN_MS);
 
-      cy.get('[test-id="circle"]')
+      cy.get(circleSelector)
          .should("have.length", startingArray.length - 1)
          .each((element, index, list) => {
             if (index === list.length - 1) {
                cy.get(element)
                   .should("have.text", startingArray[startingArray.length - 2])
                   .parent()
-                  .find('[test-id="tail"]')
-                  .should('not.contain', '[test-id="smallCircle"]')
+                  .find(tailSelector)
+                  .should('not.contain', smallCircleSelector)
                   .should("have.text", 'tail')
             }
          });      
@@ -257,39 +273,39 @@ describe('Тестирование страницы Связный список'
    it('Корректность удаления элемента по индексу', () => { 
       const delIndex = 1;
       
-      cy.get('[test-id="indexInput"]').type(delIndex);
-      cy.get('[test-id="deleteIndexButton"]').click();
+      cy.get(indexInputSelector).type(delIndex);
+      cy.get(deleteIndexSelector).click();
 
-      cy.get('[test-id="circle"]')
+      cy.get(circleSelector)
          .eq(0)
          .should('have.css', 'border-color', ElColor.changing)
 
       cy.tick(DELAY_IN_MS);
 
-      cy.get('[test-id="circle"]')
+      cy.get(circleSelector)
          .eq(0)
          .should('have.css', 'border-color', ElColor.changing)
 
-      cy.get('[test-id="circle"]')
+      cy.get(circleSelector)
          .eq(1)
          .should('have.css', 'border-color', ElColor.changing)
 
       cy.tick(DELAY_IN_MS);
 
-      cy.get('[test-id="circle"]')
+      cy.get(circleSelector)
          .eq(1)
          .should('have.text', '')
          .should('have.css', 'border-color', ElColor.changing)
          .parent()
-         .find('[test-id="tail"]')
-         .find('[test-id="smallCircle"]')
+         .find(tailSelector)
+         .find(smallCircleSelector)
          .should('have.css', 'border-color', ElColor.changing)
          .should('have.text', startingArray[delIndex]);    
       
       cy.tick(DELAY_IN_MS);
 
       const delAtIndexArray = [...startingArray.slice(0, delIndex), ...startingArray.slice(delIndex + 1)]
-      cy.get('[test-id="circle"]')
+      cy.get(circleSelector)
          .should("have.length", startingArray.length - 1)
          .each((element, index) => {
             cy.get(element)
