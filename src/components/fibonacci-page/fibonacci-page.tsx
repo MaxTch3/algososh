@@ -74,6 +74,7 @@ export const FibonacciPage: React.FC = () => {
                   isLimitText={true}
                   onChange={handleChange}
                   onKeyDown={handleKeyDown}
+                  test-id='numberInput'
                />
                <Button
                   extraClass={styles.button}
@@ -83,6 +84,7 @@ export const FibonacciPage: React.FC = () => {
                   linkedList={'small'}
                   onClick={handleClick}
                   disabled={!inputText}
+                  test-id='calculateButton'
                />
             </div>
             <div className={styles.letters_box}>

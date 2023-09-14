@@ -11,7 +11,7 @@ export const randomArr = (minLength: number, maxLength: number) => {
 }
 
 export const getSelectionSortSteps = (arr: number[], order: string): IStep[] => {
-   const steps: { array: number[], currentIndex: number, comparedIndex: number }[] = [];
+   const steps: IStep[] = [];
    for (let i = 0; i < arr.length - 1; i++) {
       let minIndex = i;
       for (let j = i + 1; j < arr.length; j++) {

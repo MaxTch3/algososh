@@ -71,6 +71,7 @@ export const StackPage: React.FC = () => {
                   extraClass={styles.input}
                   onChange={handleChange}
                   value={inputText}
+                  test-id='textInput'
                />
                <div className={styles.buttons}>
                   <div className={styles.buttons_action}>
@@ -81,6 +82,7 @@ export const StackPage: React.FC = () => {
                         disabled={!inputText || array.length >= 20 || isLoadingPop}
                         onClick={pushItem}
                         isLoader={isLoadingPush}
+                        test-id='addButton'
                      />
                      <Button
                         text='Удалить'
@@ -89,6 +91,7 @@ export const StackPage: React.FC = () => {
                         disabled={array.length === 0 || isLoadingPush}
                         onClick={popItem}
                         isLoader={isLoadingPop}
+                        test-id='deleteButton'
                      />
                   </div>
                   <Button
@@ -97,6 +100,7 @@ export const StackPage: React.FC = () => {
                      type='button'
                      disabled={array.length === 0 || isLoadingPush || isLoadingPop}
                      onClick={resetItem}
+                     test-id='clearButton'
                   />
                </div>
             </div>
